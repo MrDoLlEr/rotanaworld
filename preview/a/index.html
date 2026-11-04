@@ -218,10 +218,10 @@
       .x-store__txt small { font-size: 12px; font-weight: 500; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.85); }
       .x-store__txt b { font-size: 19px; font-weight: 600; letter-spacing: -0.01em; color: #fff; }
 
-      .x-icons { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+      .x-icons { display: flex; flex-wrap: nowrap; justify-content: center; gap: 8px; margin-top: auto; }
       .x-icon {
         position: relative; overflow: hidden;
-        width: 46px; height: 46px;
+        flex: 0 0 42px; width: 42px; height: 42px;
         display: inline-flex; align-items: center; justify-content: center;
         border-radius: 14px;
         border: 1px solid rgba(255, 255, 255, 0.35);
@@ -231,14 +231,15 @@
       .x-icon::after { content: ""; position: absolute; inset: 0; pointer-events: none;
         background: linear-gradient(160deg, rgba(255,255,255,0.32), rgba(255,255,255,0) 48%); }
       .x-icon:hover, .x-icon:active { transform: translateY(-2px); }
-      .x-icon svg { width: 22px; height: 22px; display: block; position: relative; }
+      .x-icon svg { width: 21px; height: 21px; display: block; position: relative; }
+      @media (min-width: 900px) { .x-icon { flex-basis: 36px; width: 36px; height: 36px; border-radius: 11px; } .x-icon svg { width: 18px; height: 18px; } .x-icon--yt svg, .x-icon--fb svg { width: 22px; height: 22px; } .x-icon--sc svg { width: 20px; height: 20px; } }
       .x-icon--ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
       .x-icon--x, .x-icon--tt { background: #000; }
       .x-icon--yt, .x-icon--fb { background: #fff; }
-      .x-icon--yt svg { width: 26px; height: 26px; }
-      .x-icon--fb svg { width: 26px; height: 26px; }
+      .x-icon--yt svg { width: 25px; height: 25px; }
+      .x-icon--fb svg { width: 25px; height: 25px; }
       .x-icon--sc { background: #FFFC00; }
-      .x-icon--sc svg { width: 24px; height: 24px; }
+      .x-icon--sc svg { width: 23px; height: 23px; }
 
       /* Arrived via QR */
       .x-arrived {
