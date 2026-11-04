@@ -86,11 +86,9 @@
       .x-dt::before {
         content: ""; position: absolute; left: 50%; top: -38%; width: 120%; height: 150%;
         transform: translateX(-50%); pointer-events: none;
-        background: radial-gradient(ellipse 50% 45% at 50% 18%, rgba(255,255,255,.30), rgba(255,255,255,.10) 45%, rgba(255,255,255,0) 72%);
-        filter: blur(6px);
+        background: radial-gradient(ellipse 50% 45% at 50% 18%, rgba(255,255,255,.26), rgba(255,255,255,.09) 45%, rgba(255,255,255,0) 72%);
       }
-      .x-dt canvas { position: relative; display: block; width: 100%; height: 100%;
-        filter: drop-shadow(0 0 3px rgba(255,255,255,.95)) drop-shadow(0 0 14px rgba(255,255,255,.45)); }
+      .x-dt canvas { position: absolute; left: -4%; top: -30%; width: 108%; height: 160%; display: block; pointer-events: none; }
       .x-head .x-dt__text { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; justify-content: center;
         font: 900 64px/1 "Cairo", var(--x-font); color: #fff; text-shadow: 0 0 18px rgba(255,255,255,.6); }
       .x-head .x-dt.is-dots .x-dt__text { color: transparent; text-shadow: none; }
@@ -488,27 +486,32 @@
       if (!wrap || !cv || !cv.getContext) return;
       var ctx = cv.getContext("2d");
       var TEXT = "عالم روتانا";
-      var dots = [], W = 0, H = 0, dpr = 1, ptr = { x: -9999, y: -9999 }, t0 = performance.now();
+      var glow = null, glowSize = 0, dots = [], W = 0, H = 0, dpr = 1, ptr = { x: -9999, y: -9999 }, t0 = performance.now();
       var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
       function build() {
-        var r = wrap.getBoundingClientRect();
+        var r = cv.getBoundingClientRect(), rw = wrap.getBoundingClientRect();
         W = Math.round(r.width); H = Math.round(r.height);
+        var bx = rw.left - r.left, by = rw.top - r.top, IW = rw.width, IH = rw.height;
         if (!W || !H) return;
         dpr = Math.min(window.devicePixelRatio || 1, 2);
         cv.width = W * dpr; cv.height = H * dpr;
         var off = document.createElement("canvas"); off.width = W; off.height = H;
         var o = off.getContext("2d");
-        var fs = H * 0.78;
+        var fs = IH * 0.78;
         o.font = "900 " + fs + "px Cairo, 'IBM Plex Sans Arabic', sans-serif";
         var tw = o.measureText(TEXT).width;
-        if (tw > W * 0.96) { fs = fs * (W * 0.96) / tw; o.font = "900 " + fs + "px Cairo, 'IBM Plex Sans Arabic', sans-serif"; }
+        if (tw > IW * 0.96) { fs = fs * (IW * 0.96) / tw; o.font = "900 " + fs + "px Cairo, 'IBM Plex Sans Arabic', sans-serif"; }
         o.direction = "rtl"; o.textAlign = "center"; o.textBaseline = "middle"; o.fillStyle = "#fff";
-        o.fillText(TEXT, W / 2, H * 0.56);
+        o.fillText(TEXT, bx + IW / 2, by + IH * 0.56);
         var data = o.getImageData(0, 0, W, H).data;
-        var step = Math.max(3, Math.round(W / 150));
+        var step = Math.max(3, Math.round(IW / 150));
+        glow = document.createElement("canvas"); var gs = Math.ceil(step * 4) * 2; glow.width = glow.height = gs * dpr;
+        var g = glow.getContext("2d"), gr = g.createRadialGradient(gs * dpr / 2, gs * dpr / 2, 0, gs * dpr / 2, gs * dpr / 2, gs * dpr / 2);
+        gr.addColorStop(0, "rgba(255,255,255,1)"); gr.addColorStop(0.12, "rgba(255,255,255,.95)"); gr.addColorStop(0.22, "rgba(255,255,255,.35)"); gr.addColorStop(0.5, "rgba(255,255,255,.08)"); gr.addColorStop(1, "rgba(255,255,255,0)");
+        g.fillStyle = gr; g.fillRect(0, 0, gs * dpr, gs * dpr); glowSize = gs;
         dots = [];
         for (var y = 0; y < H; y += step) for (var x = 0; x < W; x += step) {
-          if (data[(y * W + x) * 4 + 3] > 140) dots.push({ x: x, y: y, ox: x + (Math.random() - .5) * W, oy: y + (Math.random() - .5) * H, px: 0, py: 0, ph: Math.random() * 6.28, s: step });
+          if (data[(y * W + x) * 4 + 3] > 140) dots.push({ x: x, y: y, ox: bx + Math.random() * IW, oy: by + IH * (0.15 + Math.random() * 0.7), px: 0, py: 0, ph: Math.random() * 6.28, s: step });
         }
         dots.forEach(function (d) { d.px = d.ox; d.py = d.oy; });
         wrap.classList.add("is-dots");
@@ -520,19 +523,19 @@
         ctx.clearRect(0, 0, W, H);
         var tt = (now - t0) / 1000, ease = still ? 1 : Math.min(1, tt / 1.4);
         ease = 1 - Math.pow(1 - ease, 3);
-        ctx.fillStyle = "#fff";
+        ctx.globalCompositeOperation = "lighter";
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
           var tx = d.x, ty = d.y;
-          var dx = tx - ptr.x, dy = ty - ptr.y, dist = Math.sqrt(dx * dx + dy * dy), R = W * 0.12;
+          var dx = tx - ptr.x, dy = ty - ptr.y, dist = Math.sqrt(dx * dx + dy * dy), R = W * 0.1;
           if (dist < R) { var f = (1 - dist / R) * 14; tx += dx / (dist || 1) * f; ty += dy / (dist || 1) * f; }
           var gx = d.ox + (tx - d.ox) * ease, gy = d.oy + (ty - d.oy) * ease;
           d.px += (gx - d.px) * 0.2; d.py += (gy - d.py) * 0.2;
           var tw = still ? 1 : 0.65 + 0.35 * Math.sin(now / 520 + d.ph);
-          ctx.globalAlpha = tw;
-          ctx.beginPath(); ctx.arc(d.px, d.py, d.s * 0.42, 0, 6.2832); ctx.fill();
+          ctx.globalAlpha = tw * (0.25 + 0.75 * ease);
+          ctx.drawImage(glow, d.px - glowSize / 2, d.py - glowSize / 2, glowSize, glowSize);
         }
-        ctx.globalAlpha = 1;
+        ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over";
         if (!still || tt < 2) requestAnimationFrame(frame);
       }
       function setP(e) { var r = cv.getBoundingClientRect(), p = e.touches ? e.touches[0] : e; ptr.x = p.clientX - r.left; ptr.y = p.clientY - r.top; }
