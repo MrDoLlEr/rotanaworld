@@ -81,6 +81,20 @@
         letter-spacing: 0;
       }
       .x-head p { margin: 0; color: var(--x-ink-2); font-size: 15px; }
+      /* Dot-matrix title */
+      .x-dt { position: relative; width: 100%; max-width: 560px; margin: 0 auto 10px; aspect-ratio: 3.4 / 1; }
+      .x-dt::before {
+        content: ""; position: absolute; left: 50%; top: -38%; width: 120%; height: 150%;
+        transform: translateX(-50%); pointer-events: none;
+        background: radial-gradient(ellipse 50% 45% at 50% 18%, rgba(255,255,255,.30), rgba(255,255,255,.10) 45%, rgba(255,255,255,0) 72%);
+        filter: blur(6px);
+      }
+      .x-dt canvas { position: relative; display: block; width: 100%; height: 100%;
+        filter: drop-shadow(0 0 3px rgba(255,255,255,.95)) drop-shadow(0 0 14px rgba(255,255,255,.45)); }
+      .x-head .x-dt__text { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; justify-content: center;
+        font: 900 64px/1 "Cairo", var(--x-font); color: #fff; text-shadow: 0 0 18px rgba(255,255,255,.6); }
+      .x-head .x-dt.is-dots .x-dt__text { color: transparent; text-shadow: none; }
+
 
       /* Cards */
       .x-cards { display: grid; grid-template-columns: 1fr; gap: 18px; }
@@ -268,7 +282,6 @@
       @media (min-width: 900px) {
         .x-wrap { padding: 44px 28px 40px; }
         .x-head__logo { width: 180px; }
-        .x-head h1 { font-size: 32px; }
         .x-cards { grid-template-columns: repeat(3, 1fr); }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -282,7 +295,10 @@
     <div class="page" id="top">
       <main class="x-wrap">
         <header class="x-head">
-          <h1>أهلاً بيك في عالم روتانا</h1>
+          <div class="x-dt" id="dotTitleWrap">
+            <canvas id="dotTitle" aria-hidden="true"></canvas>
+            <h1 class="x-dt__text">عالم روتانا</h1>
+          </div>
           <p>امسح، تابع، وغنّي معانا</p>
         </header>
 
@@ -464,6 +480,69 @@
         window.addEventListener("hashchange", arrive);
         document.getElementById("share").addEventListener("click", share);
       })();
+    </script>
+    <script>
+    (function () {
+      var wrap = document.getElementById("dotTitleWrap");
+      var cv = document.getElementById("dotTitle");
+      if (!wrap || !cv || !cv.getContext) return;
+      var ctx = cv.getContext("2d");
+      var TEXT = "عالم روتانا";
+      var dots = [], W = 0, H = 0, dpr = 1, ptr = { x: -9999, y: -9999 }, t0 = performance.now();
+      var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+      function build() {
+        var r = wrap.getBoundingClientRect();
+        W = Math.round(r.width); H = Math.round(r.height);
+        if (!W || !H) return;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        cv.width = W * dpr; cv.height = H * dpr;
+        var off = document.createElement("canvas"); off.width = W; off.height = H;
+        var o = off.getContext("2d");
+        var fs = H * 0.78;
+        o.font = "900 " + fs + "px Cairo, 'IBM Plex Sans Arabic', sans-serif";
+        var tw = o.measureText(TEXT).width;
+        if (tw > W * 0.96) { fs = fs * (W * 0.96) / tw; o.font = "900 " + fs + "px Cairo, 'IBM Plex Sans Arabic', sans-serif"; }
+        o.direction = "rtl"; o.textAlign = "center"; o.textBaseline = "middle"; o.fillStyle = "#fff";
+        o.fillText(TEXT, W / 2, H * 0.56);
+        var data = o.getImageData(0, 0, W, H).data;
+        var step = Math.max(3, Math.round(W / 150));
+        dots = [];
+        for (var y = 0; y < H; y += step) for (var x = 0; x < W; x += step) {
+          if (data[(y * W + x) * 4 + 3] > 140) dots.push({ x: x, y: y, ox: x + (Math.random() - .5) * W, oy: y + (Math.random() - .5) * H, px: 0, py: 0, ph: Math.random() * 6.28, s: step });
+        }
+        dots.forEach(function (d) { d.px = d.ox; d.py = d.oy; });
+        wrap.classList.add("is-dots");
+        t0 = performance.now();
+      }
+      function frame(now) {
+        if (!W) { requestAnimationFrame(frame); return; }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+        var tt = (now - t0) / 1000, ease = still ? 1 : Math.min(1, tt / 1.4);
+        ease = 1 - Math.pow(1 - ease, 3);
+        ctx.fillStyle = "#fff";
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+          var tx = d.x, ty = d.y;
+          var dx = tx - ptr.x, dy = ty - ptr.y, dist = Math.sqrt(dx * dx + dy * dy), R = W * 0.12;
+          if (dist < R) { var f = (1 - dist / R) * 14; tx += dx / (dist || 1) * f; ty += dy / (dist || 1) * f; }
+          var gx = d.ox + (tx - d.ox) * ease, gy = d.oy + (ty - d.oy) * ease;
+          d.px += (gx - d.px) * 0.2; d.py += (gy - d.py) * 0.2;
+          var tw = still ? 1 : 0.65 + 0.35 * Math.sin(now / 520 + d.ph);
+          ctx.globalAlpha = tw;
+          ctx.beginPath(); ctx.arc(d.px, d.py, d.s * 0.42, 0, 6.2832); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        if (!still || tt < 2) requestAnimationFrame(frame);
+      }
+      function setP(e) { var r = cv.getBoundingClientRect(), p = e.touches ? e.touches[0] : e; ptr.x = p.clientX - r.left; ptr.y = p.clientY - r.top; }
+      function clearP() { ptr.x = ptr.y = -9999; }
+      wrap.addEventListener("pointermove", setP); wrap.addEventListener("pointerleave", clearP);
+      wrap.addEventListener("touchmove", setP, { passive: true }); wrap.addEventListener("touchend", clearP);
+      var ready = (document.fonts && document.fonts.load) ? document.fonts.load("900 60px Cairo", TEXT) : Promise.resolve();
+      Promise.resolve(ready).catch(function () {}).then(function () { build(); requestAnimationFrame(frame); });
+      var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(build, 200); });
+    })();
     </script>
   </body>
 </html>
