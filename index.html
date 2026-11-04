@@ -89,6 +89,7 @@
         background: radial-gradient(ellipse 50% 45% at 50% 18%, rgba(255,255,255,.26), rgba(255,255,255,.09) 45%, rgba(255,255,255,0) 72%);
       }
       .x-dt canvas { position: absolute; left: -4%; top: -30%; width: 108%; height: 160%; display: block; pointer-events: none; }
+      .x-dt.is-done canvas { filter: drop-shadow(0 0 3px rgba(255,255,255,.95)) drop-shadow(0 0 14px rgba(255,255,255,.45)); }
       .x-head .x-dt__text { position: absolute; inset: 0; margin: 0; display: flex; align-items: center; justify-content: center;
         font: 900 64px/1 "Cairo", var(--x-font); color: #fff; text-shadow: 0 0 18px rgba(255,255,255,.6); }
       .x-head .x-dt.is-dots .x-dt__text { color: transparent; text-shadow: none; }
@@ -521,30 +522,35 @@
         if (!W) { requestAnimationFrame(frame); return; }
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, W, H);
-        var tt = (now - t0) / 1000, ease = still ? 1 : Math.min(1, tt / 1.4);
+        var tt = (now - t0) / 1000;
+        if (still || tt > 1.9) { done(); return; }
+        var ease = Math.min(1, tt / 1.4);
         ease = 1 - Math.pow(1 - ease, 3);
         ctx.globalCompositeOperation = "lighter";
         for (var i = 0; i < dots.length; i++) {
           var d = dots[i];
           var tx = d.x, ty = d.y;
-          var dx = tx - ptr.x, dy = ty - ptr.y, dist = Math.sqrt(dx * dx + dy * dy), R = W * 0.1;
-          if (dist < R) { var f = (1 - dist / R) * 14; tx += dx / (dist || 1) * f; ty += dy / (dist || 1) * f; }
           var gx = d.ox + (tx - d.ox) * ease, gy = d.oy + (ty - d.oy) * ease;
           d.px += (gx - d.px) * 0.2; d.py += (gy - d.py) * 0.2;
-          var tw = still ? 1 : 0.65 + 0.35 * Math.sin(now / 520 + d.ph);
+          var tw = 1;
           ctx.globalAlpha = tw * (0.25 + 0.75 * ease);
           ctx.drawImage(glow, d.px - glowSize / 2, d.py - glowSize / 2, glowSize, glowSize);
         }
         ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over";
-        if (!still || tt < 2) requestAnimationFrame(frame);
+        requestAnimationFrame(frame);
+      }
+      function done() {
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+        ctx.globalAlpha = 1; ctx.globalCompositeOperation = "source-over"; ctx.fillStyle = "#fff";
+        for (var i = 0; i < dots.length; i++) { var d = dots[i]; ctx.beginPath(); ctx.arc(d.x, d.y, d.s * 0.42, 0, 6.2832); ctx.fill(); }
+        wrap.classList.add("is-done");
       }
       function setP(e) { var r = cv.getBoundingClientRect(), p = e.touches ? e.touches[0] : e; ptr.x = p.clientX - r.left; ptr.y = p.clientY - r.top; }
       function clearP() { ptr.x = ptr.y = -9999; }
-      wrap.addEventListener("pointermove", setP); wrap.addEventListener("pointerleave", clearP);
-      wrap.addEventListener("touchmove", setP, { passive: true }); wrap.addEventListener("touchend", clearP);
       var ready = (document.fonts && document.fonts.load) ? document.fonts.load("900 60px Cairo", TEXT) : Promise.resolve();
       Promise.resolve(ready).catch(function () {}).then(function () { build(); requestAnimationFrame(frame); });
-      var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(build, 200); });
+      var rt, lastW = window.innerWidth; window.addEventListener("resize", function () { if (Math.abs(window.innerWidth - lastW) < 2) return; lastW = window.innerWidth; clearTimeout(rt); rt = setTimeout(function () { build(); done(); }, 200); });
     })();
     </script>
   </body>
