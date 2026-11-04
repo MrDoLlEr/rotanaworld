@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#030b06" />
+<title>عالم روتانا</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@500;600;700&family=Cairo:wght@700;800;900&family=Geist:wght@500;600&display=swap" />
+<style>
+:root { --bg:#030b06; --green:#18c780; --font:"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif; --safe-b: env(safe-area-inset-bottom, 0px); }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin:0; height:100%; background:var(--bg); color:#fff; font-family:var(--font); -webkit-font-smoothing:antialiased; }
+body { overflow:hidden; }
+html[lang="en"] body { font-family:"Geist","Cairo",system-ui,sans-serif; }
+#bg { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; background:#030b06; }
+#bg canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+#bg.fb { background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1.4px); background-size:16px 16px; }
+
+.app { position:relative; z-index:1; height:100dvh; max-width:480px; margin:0 auto; display:flex; flex-direction:column; }
+/* top */
+.top { flex:none; padding: calc(env(safe-area-inset-top,0px) + 14px) 18px 4px; text-align:center; position:relative; }
+.lang { position:absolute; top: calc(env(safe-area-inset-top,0px) + 12px); inset-inline-end:14px; z-index:3; height:34px; min-width:54px; padding:0 12px; border-radius:999px; border:1px solid rgba(255,255,255,.45); background:linear-gradient(160deg,rgba(255,255,255,.16),rgba(255,255,255,.04)); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); box-shadow: inset 0 1px 0 rgba(255,255,255,.7); color:#fff; font:700 13px/1 "Cairo",var(--font); }
+.x-dt { position:relative; width:78%; max-width:340px; margin:6px auto 0; aspect-ratio:3.4/1; }
+.x-dt canvas { position:relative; display:block; width:100%; height:100%; filter: drop-shadow(0 0 3px rgba(255,255,255,.95)) drop-shadow(0 0 14px rgba(255,255,255,.45)); }
+.x-dt__text { position:absolute; inset:0; margin:0; display:flex; align-items:center; justify-content:center; font:900 44px/1 "Cairo",var(--font); color:#fff; }
+.x-dt.is-dots .x-dt__text { color:transparent; }
+.sub { margin:2px 0 0; font:800 19px/1.4 "Cairo",var(--font); text-shadow:0 2px 12px rgba(0,0,0,.55); }
+html[lang="en"] .sub { font-family:"Geist","Cairo",sans-serif; font-weight:600; }
+
+/* slides */
+.track { flex:1; min-height:0; display:flex; overflow-x:auto; overflow-y:hidden; scroll-snap-type:x mandatory; scrollbar-width:none; overscroll-behavior-x:contain; }
+.track::-webkit-scrollbar { display:none; }
+.slide { flex:0 0 100%; scroll-snap-align:center; scroll-snap-stop:always; display:flex; flex-direction:column; align-items:center; padding:10px 18px 14px; min-height:0; }
+.slide__in { flex:1; width:100%; display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:12px; min-height:0; }
+.hero { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; min-height:0; text-align:center; }
+
+/* glass */
+.glass { position:relative; isolation:isolate; overflow:hidden; border:1.5px solid rgba(255,255,255,.55);
+  background:linear-gradient(160deg,rgba(255,255,255,.13),rgba(255,255,255,.03) 55%,rgba(255,255,255,.08));
+  box-shadow: inset 0 1.5px 0 rgba(255,255,255,.85), inset 0 -1px 0 rgba(255,255,255,.18), inset 0 0 22px rgba(190,225,255,.10), 0 0 18px rgba(200,230,255,.12), 0 22px 50px rgba(0,0,0,.45);
+  -webkit-backdrop-filter: blur(16px) saturate(170%); backdrop-filter: blur(16px) saturate(170%); }
+.glass::before { content:""; position:absolute; inset:0; z-index:-1; border-radius:inherit; pointer-events:none;
+  background: linear-gradient(118deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,.07) 34%, rgba(255,255,255,0) 34.4%, rgba(255,255,255,0) 58%, rgba(255,255,255,.07) 58.4%, rgba(255,255,255,0) 72%),
+  radial-gradient(18px 3px at 14% 0%, rgba(255,255,255,.95), rgba(255,255,255,0)), radial-gradient(3px 16px at 100% 62%, rgba(255,255,255,.85), rgba(255,255,255,0)); }
+.glass::after { content:""; position:absolute; top:-20%; bottom:-20%; left:-60%; width:38%; z-index:-1; pointer-events:none;
+  background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.22) 50%,rgba(255,255,255,0)); transform:skewX(-18deg); animation: sheen 6s ease-in-out infinite; }
+@keyframes sheen { 0%,60% { transform:translateX(0) skewX(-18deg); } 100% { transform:translateX(520%) skewX(-18deg); } }
+
+.orb { width:min(52vw,210px); aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:15%; flex:none; }
+.orb img { max-width:100%; max-height:62%; object-fit:contain; display:block; }
+.orb--tunes img { max-height:78%; }
+.name { margin:0; font:700 15px/1 var(--font); letter-spacing:.02em; color:rgba(255,255,255,.75); }
+.line { margin:0; font:900 clamp(24px,7.2vw,32px)/1.35 "Cairo",var(--font); text-shadow:0 2px 14px rgba(0,0,0,.6); max-width:16ch; }
+html[lang="en"] .line { font-family:"Geist","Cairo",sans-serif; font-weight:600; font-size:clamp(22px,6.4vw,28px); max-width:20ch; }
+
+/* action sheet (thumb zone) */
+.sheet { width:100%; border-radius:28px; padding:16px; display:flex; flex-direction:column; gap:10px; flex:none; }
+.btn { display:flex; align-items:center; justify-content:center; gap:8px; min-height:54px; padding:10px 16px; border-radius:18px; text-decoration:none; color:#06110b; background:#fff; font:700 16px/1.2 var(--font); box-shadow:0 8px 22px rgba(0,0,0,.35), inset 0 -2px 0 rgba(0,0,0,.08); }
+.btn--ghost { color:#fff; background:linear-gradient(rgba(255,255,255,.10),rgba(255,255,255,.10)); border:1px solid rgba(255,255,255,.3); box-shadow: inset 0 1px 0 rgba(255,255,255,.3); }
+.btn:active { transform:scale(.98); }
+.b-arr { width:18px; height:18px; flex:none; }
+html[lang="ar"] .b-arr { transform:scaleX(-1); }
+.b-store { direction:ltr; display:flex; align-items:center; justify-content:center; gap:12px; min-height:56px; border-radius:18px; text-decoration:none; color:#fff; background:#000; border:1px solid rgba(255,255,255,.3); }
+.b-store--pick { border-color:var(--green); box-shadow:0 0 0 1px var(--green),0 0 18px rgba(24,199,128,.3); }
+.b-store__logo { width:24px; height:26px; flex:none; display:block; }
+.b-store__txt { display:flex; flex-direction:column; align-items:flex-start; line-height:1.1; font-family:"Geist",system-ui,sans-serif; }
+.b-store__txt small { font-size:12px; color:rgba(255,255,255,.85); }
+.b-store__txt b { font-size:19px; font-weight:600; }
+.icons { display:flex; justify-content:center; gap:8px; flex-wrap:nowrap; padding-top:2px; }
+.b-icon { position:relative; overflow:hidden; width:44px; height:44px; flex:none; display:inline-flex; align-items:center; justify-content:center; border-radius:13px; border:1px solid rgba(255,255,255,.35); box-shadow: inset 0 1px 0 rgba(255,255,255,.45), 0 6px 16px rgba(0,0,0,.35); }
+.b-icon::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(160deg,rgba(255,255,255,.32),rgba(255,255,255,0) 48%); }
+.b-icon svg { width:22px; height:22px; position:relative; display:block; }
+.b-icon--ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); }
+.b-icon--x, .b-icon--tt { background:#000; }
+.b-icon--yt, .b-icon--fb { background:#fff; }
+.b-icon--yt svg, .b-icon--fb svg { width:26px; height:26px; }
+.b-icon--sc { background:#FFFC00; }
+
+/* bottom tabs */
+.tabs { flex:none; margin:0 14px calc(var(--safe-b) + 12px); border-radius:24px; padding:6px; display:grid; grid-template-columns:repeat(3,1fr); gap:4px; }
+.tab { position:relative; border:0; background:transparent; color:rgba(255,255,255,.7); border-radius:18px; padding:8px 4px 7px; display:flex; flex-direction:column; align-items:center; gap:4px; font:700 15px/1 var(--font); cursor:pointer; min-height:46px; justify-content:center; }
+.tab img { height:22px; width:auto; opacity:.75; }
+.tab[aria-selected="true"] { color:#fff; background:linear-gradient(rgba(255,255,255,.16),rgba(255,255,255,.08)); box-shadow: inset 0 1px 0 rgba(255,255,255,.5); }
+.tab[aria-selected="true"] img { opacity:1; }
+.tab[aria-selected="true"]::after { content:""; position:absolute; bottom:-2px; width:18px; height:3px; border-radius:3px; background:var(--green); box-shadow:0 0 8px var(--green); }
+.hint { position:absolute; bottom: calc(var(--safe-b) + 96px); left:50%; transform:translateX(-50%); font:600 12px/1 var(--font); color:rgba(255,255,255,.6); pointer-events:none; transition:opacity .4s; white-space:nowrap; }
+.hint.off { opacity:0; }
+@media (max-height: 700px) { .orb { width:min(40vw,150px); } .line { font-size:22px; } .x-dt { width:62%; } .sub { font-size:16px; } .btn, .b-store { min-height:48px; } }
+@media (prefers-reduced-motion: reduce) { .glass::after { display:none; } .track { scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<div class="app">
+  <header class="top">
+    <button class="lang" id="lang" type="button" aria-label="Switch language">EN</button>
+    <div class="x-dt" id="dotTitleWrap"><canvas id="dotTitle" aria-hidden="true"></canvas><h1 class="x-dt__text">عالم روتانا</h1></div>
+    <p class="sub" data-en="Scan, follow, and sing with us">امسح، تابع، وغنّي معانا</p>
+  </header>
+
+  <main class="track" id="track">
+    <section class="slide" id="music" aria-label="Rotana Music">
+      <div class="slide__in">
+        <div class="hero">
+          <div class="orb glass"><img src="../../music-logo-official.png" alt="Rotana Music" /></div>
+          <p class="name" data-en="Rotana Music">روتانا ميوزك</p>
+          <p class="line" data-en="Tarab and music have their own code">الطرب والموسيقى لهم كود</p>
+        </div>
+        <div class="sheet glass">
+          <a class="btn" href="https://music.rotanamusic.com/music-releases" target="_blank" rel="noopener"><span data-en="Latest releases">تابع أحدث الإصدارات</span><svg class="b-arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="btn btn--ghost" href="https://rotanamusic.com/" target="_blank" rel="noopener"><span data-en="Rotana Music website">موقع روتانا ميوزك</span><svg class="b-arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="icons"><a class="b-icon b-icon--ig" href="https://www.instagram.com/rotanamusic/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path fill="#fff" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a>
+              <a class="b-icon b-icon--x" href="https://x.com/RotanaMusic" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24"><path fill="#fff" d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg></a>
+              <a class="b-icon b-icon--tt" href="https://www.tiktok.com/@rotanamusic" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><path fill="#25F4EE" transform="translate(-1 -1)" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/><path fill="#FE2C55" transform="translate(1 1)" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/><path fill="#fff" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+              <a class="b-icon b-icon--yt" href="https://www.youtube.com/@rotanamusic" target="_blank" rel="noopener" aria-label="YouTube"><svg viewBox="0 0 24 24"><path fill="#FF0000" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path fill="#fff" d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg></a>
+              <a class="b-icon b-icon--fb" href="https://www.facebook.com/rotanamusic" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a>
+              <a class="b-icon b-icon--sc" href="https://www.snapchat.com/@rotanamusic" target="_blank" rel="noopener" aria-label="Snapchat"><svg viewBox="0 0 24 24"><path fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round" d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.54 0-.958.089-1.272.149-.211.043-.391.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-1.107-.435-1.257-.93-1.197-1.273.09-.479.674-.793 1.168-.793.146 0 .27.029.383.074.42.194.789.3 1.104.3.234 0 .384-.06.465-.105l-.046-.569c-.098-1.626-.225-3.651.307-4.837C7.392 1.077 10.739.807 11.727.807l.419-.015h.06z"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" id="live" aria-label="Rotana Live">
+      <div class="slide__in">
+        <div class="hero">
+          <div class="orb glass"><img src="../../live-logo-white.png" alt="Rotana Live" /></div>
+          <p class="name" data-en="Rotana Live">روتانا لايف</p>
+          <p class="line" data-en="Rotana concerts, the vibe and the coverage">حفلات روتانا وأجواءها وتغطياتها</p>
+        </div>
+        <div class="sheet glass">
+          <a class="btn" href="https://www.instagram.com/rotanalive/" target="_blank" rel="noopener"><span data-en="Follow Rotana Live">تابع روتانا لايف</span><svg class="b-arr" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="icons"><a class="b-icon b-icon--ig" href="https://www.instagram.com/rotanalive/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path fill="#fff" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a>
+              <a class="b-icon b-icon--x" href="https://x.com/RotanaLive" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24"><path fill="#fff" d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg></a>
+              <a class="b-icon b-icon--tt" href="https://www.tiktok.com/@rotanalive" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><path fill="#25F4EE" transform="translate(-1 -1)" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/><path fill="#FE2C55" transform="translate(1 1)" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/><path fill="#fff" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg></a>
+              <a class="b-icon b-icon--fb" href="https://www.facebook.com/rotanalive" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a>
+              <a class="b-icon b-icon--sc" href="https://www.snapchat.com/add/rotanalive" target="_blank" rel="noopener" aria-label="Snapchat"><svg viewBox="0 0 24 24"><path fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round" d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.54 0-.958.089-1.272.149-.211.043-.391.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-1.107-.435-1.257-.93-1.197-1.273.09-.479.674-.793 1.168-.793.146 0 .27.029.383.074.42.194.789.3 1.104.3.234 0 .384-.06.465-.105l-.046-.569c-.098-1.626-.225-3.651.307-4.837C7.392 1.077 10.739.807 11.727.807l.419-.015h.06z"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+    <section class="slide" id="tunes" aria-label="Rotana Tunes">
+      <div class="slide__in">
+        <div class="hero">
+          <div class="orb orb--tunes glass"><img src="../../tunes-logo-white.png" alt="Rotana Tunes" /></div>
+          <p class="name" data-en="Rotana Tunes">روتانا تيونز</p>
+          <p class="line" data-en="Sing Rotana songs in your voice. Scan the code and let us hear you">أغاني روتانا بصوتك، امسح الكود وسمّعنا</p>
+        </div>
+        <div class="sheet glass" id="stores">
+          <a class="b-store" data-store="ios" href="https://apps.apple.com/sa/app/rotana-tunes/id6760004818" target="_blank" rel="noopener" aria-label="Download on the App Store"><svg class="b-store__logo" viewBox="0 0 384 512" aria-hidden="true"><path fill="#ffffff" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg><span class="b-store__txt"><small>Download on the</small><b>App Store</b></span></a>
+          <a class="b-store" data-store="android" href="https://play.google.com/store/apps/details?id=rotana.tunes" target="_blank" rel="noopener" aria-label="Get it on Google Play"><svg class="b-store__logo" viewBox="0 0 24 26" aria-hidden="true"><path fill="#00D7FE" d="M1.1.6C.8.9.6 1.4.6 2v22c0 .6.2 1.1.5 1.4l.1.1L13.5 13.2V12.8L1.2.5z"/><path fill="#FFC900" d="M17.6 17.3l-4.1-4.1v-.4l4.1-4.1.1.1 4.9 2.8c1.4.8 1.4 2.1 0 2.9l-4.9 2.8z"/><path fill="#FF3A44" d="M17.7 17.2L13.5 13 1.1 25.4c.5.5 1.2.5 2.1.1l14.5-8.3"/><path fill="#00F076" d="M17.7 8.8L3.2.5C2.3 0 1.6.1 1.1.6L13.5 13z"/></svg><span class="b-store__txt"><small>GET IT ON</small><b>Google Play</b></span></a>
+          <div class="icons"><a class="b-icon b-icon--ig" href="https://www.instagram.com/rotanatunes/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path fill="#fff" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a></div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <nav class="tabs glass" role="tablist">
+    <button class="tab" role="tab" data-go="music" aria-selected="true"><span data-en="Music">ميوزك</span></button>
+    <button class="tab" role="tab" data-go="live" aria-selected="false"><span data-en="Live">لايف</span></button>
+    <button class="tab" role="tab" data-go="tunes" aria-selected="false"><span data-en="Tunes">تيونز</span></button>
+  </nav>
+</div>
+
+<script>
+(function () {
+  var html = document.documentElement, btn = document.getElementById("lang");
+  var els = Array.prototype.slice.call(document.querySelectorAll("[data-en]"));
+  els.forEach(function (el) { el.setAttribute("data-ar", el.textContent); });
+  function apply(lang, rebuild) {
+    var en = lang === "en", keep = window.__curSlide;
+    html.lang = en ? "en" : "ar"; html.dir = en ? "ltr" : "rtl";
+    els.forEach(function (el) { el.textContent = el.getAttribute(en ? "data-en" : "data-ar"); });
+    document.title = en ? "Rotana World" : "عالم روتانا";
+    document.querySelector(".x-dt__text").textContent = en ? "Rotana World" : "عالم روتانا";
+    btn.textContent = en ? "عربي" : "EN";
+    if (rebuild && window.__dtSet) window.__dtSet(en ? "Rotana World" : "عالم روتانا");
+    if (keep && window.__go) setTimeout(function () { window.__go(keep, false); }, 30);
+  }
+  var saved = null; try { saved = localStorage.getItem("rw-lang"); } catch (e) {}
+  var first = saved || ((navigator.language || "ar").toLowerCase().indexOf("ar") === 0 ? "ar" : "en");
+  if (first === "en") apply("en", false);
+  btn.addEventListener("click", function () { var n = html.lang === "en" ? "ar" : "en"; try { localStorage.setItem("rw-lang", n); } catch (e) {} apply(n, true); });
+})();
+</script>
+<script src="../../rotana-particles.js"></script>
+<script>
+(function () {
+  var track = document.getElementById("track"), tabs = document.querySelectorAll(".tab"), hint = {classList:{add:function(){}}};
+  var ids = ["music", "live", "tunes"];
+  function go(id, smooth) {
+    var el = document.getElementById(id); if (!el) return;
+    track.scrollTo({ left: el.offsetLeft - track.offsetLeft, behavior: smooth === false ? "auto" : "smooth" });
+    mark(id);
+  }
+  function mark(id) {
+    window.__curSlide = id;
+    tabs.forEach(function (t) { t.setAttribute("aria-selected", t.getAttribute("data-go") === id ? "true" : "false"); });
+  }
+  window.__go = go;
+  tabs.forEach(function (t) { t.addEventListener("click", function () { go(t.getAttribute("data-go")); history.replaceState(null, "", "#" + t.getAttribute("data-go")); }); });
+  var st;
+  track.addEventListener("scroll", function () {
+    hint.classList.add("off");
+    clearTimeout(st); st = setTimeout(function () {
+      var best = null, bd = 1e9, mid = track.getBoundingClientRect().left + track.clientWidth / 2;
+      ids.forEach(function (k) { var r = document.getElementById(k).getBoundingClientRect(); var d = Math.abs(r.left + r.width / 2 - mid); if (d < bd) { bd = d; best = k; } });
+      if (best) mark(best);
+    }, 80);
+  }, { passive: true });
+  setTimeout(function () { hint.classList.add("off"); }, 4500);
+  function fromHash() { var h = (location.hash || "").slice(1); if (ids.indexOf(h) >= 0) { go(h, false); hint.classList.add("off"); } else mark("music"); }
+  window.addEventListener("hashchange", fromHash);
+  // stores by device
+  var ua = navigator.userAgent || "", ios = /iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1), andr = /Android/i.test(ua);
+  var wrap = document.getElementById("stores"), pick = ios ? "ios" : andr ? "android" : null;
+  if (pick) { var b = wrap.querySelector('[data-store="' + pick + '"]'); b.classList.add("b-store--pick"); wrap.insertBefore(b, wrap.firstChild); }
+  // background
+  var host = document.getElementById("bg");
+  function fb() { host.innerHTML = ""; host.classList.add("fb"); }
+  document.addEventListener("DOMContentLoaded", function () {
+    try {
+      if (typeof window.mountRotanaParticles !== "function") return fb();
+      var stop = window.mountRotanaParticles(host), c = host.querySelector("canvas"), r = c && c.dataset.renderer;
+      if (!c || r === "unavailable" || r === "shader-error") { if (typeof stop === "function") stop(); fb(); }
+    } catch (e) { fb(); }
+    setTimeout(fromHash, 60);
+  });
+})();
+</script>
+<script>
+    (function () {
+      var wrap = document.getElementById("dotTitleWrap");
+      var cv = document.getElementById("dotTitle");
+      if (!wrap || !cv || !cv.getContext) return;
+      var ctx = cv.getContext("2d");
+      var TEXT = document.documentElement.lang === "en" ? "Rotana World" : "عالم روتانا";
+      var dots = [], W = 0, H = 0, dpr = 1, ptr = { x: -9999, y: -9999 }, t0 = performance.now();
+      var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+      function build() {
+        var r = wrap.getBoundingClientRect();
+        W = Math.round(r.width); H = Math.round(r.height);
+        if (!W || !H) return;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        cv.width = W * dpr; cv.height = H * dpr;
+        var off = document.createElement("canvas"); off.width = W; off.height = H;
+        var o = off.getContext("2d");
+        var fs = H * 0.78;
+        o.font = "900 " + fs + "px Cairo, 'IBM Plex Sans Arabic', sans-serif";
+        var tw = o.measureText(TEXT).width;
+        if (tw > W * 0.96) { fs = fs * (W * 0.96) / tw; o.font = "900 " + fs + "px Cairo, 'IBM Plex Sans Arabic', sans-serif"; }
+        o.direction = TEXT === "Rotana World" ? "ltr" : "rtl"; o.textAlign = "center"; o.textBaseline = "middle"; o.fillStyle = "#fff";
+        o.fillText(TEXT, W / 2, H * 0.56);
+        var data = o.getImageData(0, 0, W, H).data;
+        var step = Math.max(3, Math.round(W / 150));
+        dots = [];
+        for (var y = 0; y < H; y += step) for (var x = 0; x < W; x += step) {
+          if (data[(y * W + x) * 4 + 3] > 140) dots.push({ x: x, y: y, ox: x + (Math.random() - .5) * W, oy: y + (Math.random() - .5) * H, px: 0, py: 0, ph: Math.random() * 6.28, s: step });
+        }
+        dots.forEach(function (d) { d.px = d.ox; d.py = d.oy; });
+        wrap.classList.add("is-dots");
+        t0 = performance.now();
+      }
+      function frame(now) {
+        if (!W) { requestAnimationFrame(frame); return; }
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+        var tt = (now - t0) / 1000, ease = still ? 1 : Math.min(1, tt / 1.4);
+        ease = 1 - Math.pow(1 - ease, 3);
+        ctx.fillStyle = "#fff";
+        for (var i = 0; i < dots.length; i++) {
+          var d = dots[i];
+          var tx = d.x, ty = d.y;
+          var dx = tx - ptr.x, dy = ty - ptr.y, dist = Math.sqrt(dx * dx + dy * dy), R = W * 0.12;
+          if (dist < R) { var f = (1 - dist / R) * 14; tx += dx / (dist || 1) * f; ty += dy / (dist || 1) * f; }
+          var gx = d.ox + (tx - d.ox) * ease, gy = d.oy + (ty - d.oy) * ease;
+          d.px += (gx - d.px) * 0.2; d.py += (gy - d.py) * 0.2;
+          var tw = still ? 1 : 0.65 + 0.35 * Math.sin(now / 520 + d.ph);
+          ctx.globalAlpha = tw;
+          ctx.beginPath(); ctx.arc(d.px, d.py, d.s * 0.42, 0, 6.2832); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        if (!still || tt < 2) requestAnimationFrame(frame);
+      }
+      function setP(e) { var r = cv.getBoundingClientRect(), p = e.touches ? e.touches[0] : e; ptr.x = p.clientX - r.left; ptr.y = p.clientY - r.top; }
+      function clearP() { ptr.x = ptr.y = -9999; }
+      wrap.addEventListener("pointermove", setP); wrap.addEventListener("pointerleave", clearP);
+      wrap.addEventListener("touchmove", setP, { passive: true }); wrap.addEventListener("touchend", clearP);
+      var ready = (document.fonts && document.fonts.load) ? document.fonts.load("900 60px Cairo", TEXT) : Promise.resolve();
+      Promise.resolve(ready).catch(function () {}).then(function () { build(); requestAnimationFrame(frame); });
+      window.__dtSet = function (t) { TEXT = t; var go = function () { build(); if (still) requestAnimationFrame(frame); }; (document.fonts && document.fonts.load ? document.fonts.load("900 60px Cairo", t) : Promise.resolve()).catch(function () {}).then(go); };
+      var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(build, 200); });
+    })();
+    </script>
+</body>
+</html>
