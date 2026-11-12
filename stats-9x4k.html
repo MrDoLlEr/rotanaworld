@@ -5,52 +5,89 @@
 <title>إحصائيات عالم روتانا</title>
 <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#07080c;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--tx:#f3f4f7;--mu:#9aa0ad;--ac:#7fd3ff}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#18202e,var(--bg));color:var(--tx);font-family:Almarai,system-ui,sans-serif;min-height:100vh}
-.w{max-width:960px;margin:0 auto;padding:24px 16px 60px}h1{font-size:26px;margin:0 0 4px}.sub{color:var(--mu);font-size:14px;margin-bottom:18px}
-.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.bar button{background:var(--card);border:1px solid var(--line);color:var(--tx);font:inherit;padding:8px 14px;border-radius:999px;cursor:pointer}.bar button.on{background:#fff;color:#000}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
-.k{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;backdrop-filter:blur(14px)}.k b{display:block;font-size:30px;font-weight:800}.k span{color:var(--mu);font-size:13px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:640px){.grid{grid-template-columns:1fr}}
-.c{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}.c h2{font-size:16px;margin:0 0 10px}
-.r{display:grid;grid-template-columns:110px 1fr 44px;align-items:center;gap:8px;font-size:14px;margin:7px 0}.r i{display:block;height:10px;border-radius:6px;background:var(--ac)}.r em{font-style:normal;text-align:left;color:var(--mu)}
-.days{display:flex;align-items:flex-end;gap:3px;height:120px}.days div{flex:1;background:var(--ac);border-radius:4px 4px 0 0;min-height:2px;position:relative}
-.note{color:var(--mu);font-size:12px;margin-top:16px;line-height:1.7}.err{color:#ff8a8a}
+:root{--bg:#030b06;--card:rgba(255,255,255,.045);--line:rgba(255,255,255,.10);--tx:#ffffff;--mu:rgba(255,255,255,.58);--g:#18c780;--g2:#14ff3d}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(900px 480px at 50% -120px,rgba(24,199,128,.20),transparent 70%),var(--bg);color:var(--tx);font-family:Almarai,system-ui,sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+.w{max-width:980px;margin:0 auto;padding:28px 16px 48px}
+header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+h1{font-size:28px;font-weight:800;margin:0}
+.sub{color:var(--mu);font-size:13px;margin-top:6px}
+.bar{display:flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px}
+.bar button{background:none;border:0;color:var(--mu);font:inherit;font-size:14px;font-weight:700;padding:8px 16px;border-radius:999px;cursor:pointer}
+.bar button.on{background:var(--g);color:#02150c}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+@media(max-width:700px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.k,.c{background:var(--card);border:1px solid var(--line);border-radius:20px;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.k{padding:18px 16px}
+.k span{display:block;color:var(--mu);font-size:14px;margin-bottom:8px}
+.k b{display:block;font-size:38px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.k.hi{border-color:rgba(24,199,128,.55);background:linear-gradient(180deg,rgba(24,199,128,.16),rgba(24,199,128,.04))}
+.k.hi b{color:var(--g2)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+.c{padding:18px 16px}
+.c.full{margin-bottom:12px}
+.c h2{font-size:17px;font-weight:800;margin:0 0 14px}
+.r{display:grid;grid-template-columns:minmax(96px,50%) 1fr 40px;align-items:center;gap:10px;font-size:15px;margin:10px 0}
+.r span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r .t{height:8px;border-radius:8px;background:rgba(255,255,255,.07);overflow:hidden}
+.r .t i{display:block;height:100%;border-radius:8px;background:linear-gradient(90deg,var(--g2),var(--g))}
+.r em{font-style:normal;font-weight:700;text-align:left;font-variant-numeric:tabular-nums}
+.chart{direction:ltr;display:flex;align-items:flex-end;gap:4px;height:140px;border-bottom:1px solid var(--line)}
+.chart div{flex:1;max-width:44px;margin:0 auto;background:linear-gradient(180deg,var(--g2),var(--g));border-radius:5px 5px 0 0;min-height:0;position:relative}
+.chart.many{gap:2px}.chart div.z{background:rgba(255,255,255,.08);height:2px!important}
+.chart div b{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:11px;font-weight:700;padding-bottom:3px}
+.ax{display:flex;justify-content:space-between;color:var(--mu);font-size:12px;margin-top:8px;direction:ltr}
+.empty{color:var(--mu);font-size:14px;padding:6px 0}
+.err{color:#ff8a8a}
 </style>
 </head>
 <body><div class="w">
-<h1>إحصائيات عالم روتانا</h1><div class="sub" id="upd">جاري التحميل…</div>
-<div class="bar" id="bar"><button data-d="1">اليوم</button><button data-d="7">٧ أيام</button><button data-d="30" class="on">٣٠ يوم</button><button data-d="365">سنة</button></div>
+<header>
+  <div><h1>إحصائيات عالم روتانا</h1><div class="sub" id="upd">جارٍ التحميل…</div></div>
+  <div class="bar" id="bar"><button data-d="1">اليوم</button><button data-d="7">7 أيام</button><button data-d="30" class="on">30 يومًا</button><button data-d="365">سنة</button></div>
+</header>
 <div class="kpis">
-<div class="k"><b id="k1">–</b><span>زوار (أشخاص)</span></div>
-<div class="k"><b id="k2">–</b><span>جوا من مسح الكود</span></div>
-<div class="k"><b id="k3">–</b><span>ضغطوا تحميل التطبيق</span></div>
-<div class="k"><b id="k4">–</b><span>مرات الدخول</span></div>
+  <div class="k"><span>عدد الزوار</span><b id="k1">–</b></div>
+  <div class="k hi"><span>عبر رمز QR (تقديري)</span><b id="k2">–</b></div>
+  <div class="k hi"><span>نقرات تحميل التطبيق</span><b id="k3">–</b></div>
+  <div class="k"><span>إجمالي الزيارات</span><b id="k4">–</b></div>
 </div>
-<div class="c" style="margin-bottom:10px"><h2>الزوار يومياً</h2><div class="days" id="days"></div></div>
+<div class="c full"><h2 id="ct">الزوار حسب اليوم</h2><div class="chart" id="chart"></div><div class="ax" id="ax"></div></div>
 <div class="grid">
-<div class="c"><h2>جوا من وين</h2><div id="src"></div></div>
-<div class="c"><h2>نوع الجهاز</h2><div id="dev"></div></div>
-<div class="c"><h2>البلد / المدينة</h2><div id="tz"></div></div>
-<div class="c"><h2>أكثر شي ضغطوا عليه</h2><div id="clk"></div></div>
-<div class="c"><h2>ساعات الدخول (توقيت السعودية)</h2><div id="hr"></div></div>
-<div class="c"><h2>لغة الجوال</h2><div id="lng"></div></div>
+  <div class="c"><h2>مصدر الزيارة</h2><div id="src"></div></div>
+  <div class="c"><h2>الروابط الأكثر نقرًا</h2><div id="clk"></div></div>
+  <div class="c"><h2>نوع الجهاز</h2><div id="dev"></div></div>
+  <div class="c"><h2>الدولة</h2><div id="tz"></div></div>
 </div>
-<div class="note">«مسح الكود» = دخول من جوال بدون أي مصدر (ما جا من إنستقرام أو X أو غيرهم). الرقم تقريبي، وممكن يدخل معاه قلة كتبوا الرابط بيدهم.<br>«ضغطوا تحميل» = ضغطات على أزرار App Store و Google Play. التثبيت الفعلي يطلع في حسابات المتاجر.</div>
 </div>
 <script>
 var SB="https://vtowjbodaleyenptghwm.supabase.co",KEY="sb_publishable_fnBayg7q3G25VaYNCXu7aQ_rEg59kt3";
-var SRC={qr:"مسح الكود",instagram:"إنستقرام",x:"X",facebook:"فيسبوك",snapchat:"سناب شات",tiktok:"تيك توك",whatsapp:"واتساب",google:"قوقل",youtube:"يوتيوب",direct:"مباشر (كمبيوتر)",other:"مواقع أخرى",linkedin:"لينكدإن",bing:"Bing"};
-var TZ={"Asia/Riyadh":"السعودية","Asia/Dubai":"الإمارات","Asia/Kuwait":"الكويت","Asia/Qatar":"قطر","Asia/Bahrain":"البحرين","Asia/Muscat":"عُمان","Africa/Cairo":"مصر","Asia/Amman":"الأردن","Asia/Beirut":"لبنان","Asia/Baghdad":"العراق","Africa/Khartoum":"السودان","Asia/Damascus":"سوريا","Africa/Casablanca":"المغرب","Africa/Algiers":"الجزائر","Africa/Tunis":"تونس","Asia/Aden":"اليمن","Europe/London":"بريطانيا"};
-function rows(id,a,map){var el=document.getElementById(id);if(!a||!a.length){el.innerHTML='<div class="sub">ما في بيانات لسه</div>';return}var mx=Math.max.apply(0,a.map(function(x){return x.n}));el.innerHTML=a.map(function(x){var k=x.k==null?"غير معروف":(map?(typeof map=="function"?map(x.k):(map[x.k]||x.k)):x.k);return '<div class="r"><span>'+String(k).replace(/</g,"&lt;")+'</span><i style="width:'+Math.max(3,x.n/mx*100)+'%"></i><em>'+x.n+'</em></div>'}).join("")}
-function load(d){document.getElementById("upd").textContent="جاري التحميل…";
-fetch(SB+"/rest/v1/rpc/rw_stats",{method:"POST",headers:{apikey:KEY,"Content-Type":"application/json"},body:JSON.stringify({days:d})}).then(function(r){return r.json()}).then(function(s){
-k1.textContent=s.visitors;k2.textContent=s.qr;k3.textContent=s.store_clicks;k4.textContent=s.visits;
-rows("src",s.by_src,SRC);rows("dev",s.by_device);rows("tz",s.by_tz,function(k){return TZ[k]||k.split("/").pop().replace(/_/g," ")});rows("clk",s.clicks);rows("lng",s.by_lang);
-rows("hr",s.by_hour,function(h){return (h%12||12)+(h<12?" ص":" م")});
-var dd=s.by_day||[],mx=Math.max.apply(0,dd.map(function(x){return x.n}).concat([1]));document.getElementById("days").innerHTML=dd.map(function(x){return '<div title="'+x.k+': '+x.n+'" style="height:'+(x.n/mx*100)+'%"></div>'}).join("");
-document.getElementById("upd").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA");
-}).catch(function(){document.getElementById("upd").innerHTML='<span class="err">ما قدرت أجيب الأرقام، جرّب تاني</span>'})}
+var SRC={qr:"رمز QR",instagram:"إنستغرام",x:"إكس",facebook:"فيسبوك",snapchat:"سناب شات",tiktok:"تيك توك",whatsapp:"واتساب",google:"جوجل",youtube:"يوتيوب",direct:"رابط مباشر",other:"مواقع أخرى",linkedin:"لينكد إن",bing:"بينغ"};
+var DEV={iPhone:"آيفون",Android:"أندرويد",Mac:"ماك",Windows:"ويندوز",Other:"أخرى"};
+var TZ={"Asia/Riyadh":"السعودية","Asia/Dubai":"الإمارات","Asia/Kuwait":"الكويت","Asia/Qatar":"قطر","Asia/Bahrain":"البحرين","Asia/Muscat":"عُمان","Africa/Cairo":"مصر","Asia/Amman":"الأردن","Asia/Beirut":"لبنان","Asia/Baghdad":"العراق","Africa/Khartoum":"السودان","Asia/Damascus":"سوريا","Africa/Casablanca":"المغرب","Africa/Algiers":"الجزائر","Africa/Tunis":"تونس","Asia/Aden":"اليمن","Africa/Tripoli":"ليبيا","Asia/Hebron":"فلسطين","Asia/Gaza":"فلسطين","Europe/London":"بريطانيا","Europe/Istanbul":"تركيا","Europe/Paris":"فرنسا","Europe/Berlin":"ألمانيا","America/New_York":"الولايات المتحدة","America/Chicago":"الولايات المتحدة","America/Los_Angeles":"الولايات المتحدة"};
+var HOST={instagram:"إنستغرام",x:"إكس",tiktok:"تيك توك",youtube:"يوتيوب",facebook:"فيسبوك",snapchat:"سناب شات","music.rotanamusic":"أحدث الأغاني",rotanamusic:"موقع روتانا"};
+var ACC={rotanamusic:"روتانا ميوزك",rotanalive:"روتانا لايف",rotanafmksa:"روتانا إف إم",rotanatunes:"روتانا تيونز"};
+function click(k){if(k=="App Store")return "آب ستور";if(k=="Google Play")return "جوجل بلاي";var p=k.split("/"),h=HOST[p[0]]||p[0],a=p[1]=="add"?"rotanalive":(p[1]||"").toLowerCase();return ACC[a]&&HOST[p[0]]&&p[0].indexOf("rotanamusic")<0?h+" · "+ACC[a]:h}
+function esc(s){return String(s).replace(/</g,"&lt;")}
+function rows(id,a,map){var el=document.getElementById(id);if(!a||!a.length){el.innerHTML='<div class="empty">لا توجد بيانات بعد</div>';return}
+ var m={};a.forEach(function(x){var k=x.k==null?"غير محدد":(typeof map=="function"?map(x.k):(map[x.k]||x.k));m[k]=(m[k]||0)+x.n});
+ var l=Object.keys(m).map(function(k){return{k:k,n:m[k]}}).sort(function(a,b){return b.n-a.n}).slice(0,8),mx=l[0].n;
+ el.innerHTML=l.map(function(x){return '<div class="r"><span>'+esc(x.k)+'</span><div class="t"><i style="width:'+Math.max(4,x.n/mx*100)+'%"></i></div><em>'+x.n+'</em></div>'}).join("")}
+function chart(s,d){var bars=[],lab=["",""],t=document.getElementById("ct");
+ if(d==1){t.textContent="الزيارات حسب الساعة";var h={};(s.by_hour||[]).forEach(function(x){h[x.k]=x.n});for(var i=0;i<24;i++)bars.push(h[i]||0);lab=["12 ص","11 م"]}
+ else if(d>31){t.textContent="الزوار حسب الشهر";var mo={};(s.by_day||[]).forEach(function(x){var k=x.k.slice(0,7);mo[k]=(mo[k]||0)+x.n});var n=new Date();for(var i=11;i>=0;i--){var x=new Date(n.getFullYear(),n.getMonth()-i,1),k=x.getFullYear()+"-"+("0"+(x.getMonth()+1)).slice(-2);bars.push(mo[k]||0);if(i==11)lab[0]=k;if(i==0)lab[1]=k}}
+ else{t.textContent="الزوار حسب اليوم";var dy={};(s.by_day||[]).forEach(function(x){dy[x.k]=x.n});for(var i=d-1;i>=0;i--){var k=new Date(Date.now()-i*864e5).toLocaleDateString("en-CA",{timeZone:"Asia/Riyadh"});bars.push(dy[k]||0);if(i==d-1)lab[0]=k.slice(5);if(i==0)lab[1]=k.slice(5)}}
+ var mx=Math.max.apply(0,bars.concat([1]));
+ document.getElementById("chart").innerHTML=bars.map(function(n){return n?'<div style="height:'+Math.max(6,n/mx*82)+'%" title="'+n+'">'+(bars.length<=14?'<b>'+n+'</b>':'')+'</div>':'<div class="z"></div>'}).join("");
+ document.getElementById("ax").innerHTML="<span>"+lab[0]+"</span><span>"+lab[1]+"</span>"}
+function load(d){fetch(SB+"/rest/v1/rpc/rw_stats",{method:"POST",headers:{apikey:KEY,"Content-Type":"application/json"},body:JSON.stringify({days:d})}).then(function(r){return r.json()}).then(function(s){
+ k1.textContent=s.visitors;k2.textContent=s.qr;k3.textContent=s.store_clicks;k4.textContent=s.visits;
+ rows("src",s.by_src,SRC);rows("dev",s.by_device,DEV);rows("clk",s.clicks,click);
+ rows("tz",s.by_tz,function(k){return TZ[k]||k.split("/").pop().replace(/_/g," ")});
+ chart(s,d);
+ document.getElementById("upd").textContent="آخر تحديث "+new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})+" · يتحدّث تلقائيًا";
+}).catch(function(){document.getElementById("upd").innerHTML='<span class="err">تعذّر تحميل البيانات</span>'})}
 var cur=30;document.getElementById("bar").onclick=function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove("on")});b.classList.add("on");cur=+b.dataset.d;load(cur)};
 load(cur);setInterval(function(){load(cur)},60000);
 </script>
