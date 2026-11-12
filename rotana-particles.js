@@ -81,6 +81,16 @@ function mountRotanaParticles(host) {
         alpha*=0.65+0.35*smoothstep(-1.0,0.6,z);
         v_flash=exp(-u_pulseT*2.5)*0.8;
         alpha*=1.0+v_flash;
+      }else if(a_kind>2.5){
+        // A faint white wave above the scene, its points glinting softly.
+        v_white=1.0;
+        float x=a_position.x, z=a_position.z;
+        float ph=x*0.30+z*0.14+u_time*0.06;
+        float wave=sin(ph)*0.7+sin(ph*0.47-z*0.08+u_time*0.02)*0.25;
+        p=vec3(x,7.4-x*x*0.010-wave,z);
+        float h=hash(a_position);
+        float glint=pow(0.5+0.5*sin(u_time*(0.6+h*0.9)+h*60.0),8.0);
+        alpha*=(0.55+2.2*glint)*smoothstep(-25.0,-15.0,z)*(1.0-smoothstep(2.0,5.0,z));
       }else{
         // Sparse green points rising in the same 3D world.
         float life=fract(a_position.y+u_time*0.005);
@@ -122,6 +132,7 @@ function mountRotanaParticles(host) {
   try {
     gl.attachShader(program, shader(gl.VERTEX_SHADER, vertex));
     gl.attachShader(program, shader(gl.FRAGMENT_SHADER, fragment));
+    ["a_position", "a_kind", "a_size", "a_alpha"].forEach((n, i) => gl.bindAttribLocation(program, i, n));
     gl.linkProgram(program);
     if (!gl.getProgramParameter(program, gl.LINK_STATUS))
       throw new Error(gl.getProgramInfoLog(program));
@@ -151,6 +162,14 @@ function mountRotanaParticles(host) {
         v = row / (rows - 1);
       const edge = Math.pow(Math.sin(u * Math.PI), 0.65);
       add((u * 2 - 1) * 24, 0, 5 - v * 30, 0, 1.9, 0.52 * edge);
+    }
+  // Faint white wave overhead (kind 3).
+  const tc = mobile ? 70 : 120, tr = mobile ? 20 : 30;
+  for (let row = 0; row < tr; row++)
+    for (let col = 0; col < tc; col++) {
+      const u = col / (tc - 1), v = row / (tr - 1);
+      const edge = Math.pow(Math.sin(u * Math.PI), 0.8);
+      add((u * 2 - 1) * 24, 0, 4 - v * 29, 3, 1.6, 0.3 * edge);
     }
   const trace = document.createElement("canvas").getContext("2d");
   const divider = new Path2D(
@@ -287,6 +306,157 @@ function mountRotanaParticles(host) {
       1,
     ]);
   }
+  // ---- Crystal glass: the live scene is rendered to a texture, then every DOM glass
+  // shape (cards, orbs, buttons, icon tiles) is drawn as a real lens over it:
+  // a rounded bevel that bends the dots behind it, RGB dispersion at the edges,
+  // a slight magnification through the flat face and a light-facing rim.
+  const GLASS_SEL = ".x-glass, .x-btn, .x-icon";
+  const glass = { on: false, prog: null, copy: null, quad: null, fbo: null, tex: null, w: 0, h: 0, els: [], u: {}, uc: {} };
+  const bgRGB = [0.012, 0.043, 0.024];
+  function glassInit() {
+    const hp = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
+    if (!hp || hp.precision < 16) return;
+    const v = `
+      precision highp float; attribute vec2 a_quad; uniform vec4 u_box; uniform vec2 u_res;
+      void main(){ vec2 px=u_box.xy+a_quad*u_box.zw; gl_Position=vec4(px/u_res*2.0-1.0,0.0,1.0); }`;
+    const fCopy = `
+      precision highp float; uniform sampler2D u_scene; uniform vec2 u_res;
+      void main(){ gl_FragColor=texture2D(u_scene, gl_FragCoord.xy/u_res); }`;
+    const fGlass = `
+      precision highp float;
+      uniform sampler2D u_scene; uniform vec2 u_res; uniform vec2 u_c; uniform vec2 u_half;
+      uniform float u_r; uniform float u_bevel; uniform vec3 u_bg; uniform float u_frost; uniform float u_dpr;
+      float sd(vec2 p){ vec2 q=abs(p)-u_half+vec2(u_r); return length(max(q,0.0))+min(max(q.x,q.y),0.0)-u_r; }
+      vec4 tap(vec2 px){ return texture2D(u_scene, clamp(px/u_res, vec2(0.0), vec2(1.0))); }
+      void main(){
+        vec2 frag=gl_FragCoord.xy, p=frag-u_c;
+        float d=sd(p);
+        if(d>1.0) discard;
+        float cover=clamp(0.5-d,0.0,1.0);
+        vec2 g=vec2(sd(p+vec2(1.0,0.0))-sd(p-vec2(1.0,0.0)), sd(p+vec2(0.0,1.0))-sd(p-vec2(0.0,1.0)));
+        vec2 n=normalize(g+vec2(1e-5));
+        float t=clamp(-d/u_bevel,0.0,1.0), s=1.0-t;
+        float slope=min(s/sqrt(max(1.0-s*s,0.02)),2.4);
+        vec2 disp=-n*slope*u_bevel*0.4 - p*0.03*t;
+        // frosted crystal: a soft disk blur through the face, crisp dispersion at the bevel
+        float rad=mix(1.5,u_frost,t)*u_dpr;
+        vec3 acc=vec3(0.0);
+        for(int i=0;i<10;i++){
+          float fi=float(i);
+          float ang=fi*2.39996;
+          vec2 o=vec2(cos(ang),sin(ang))*sqrt((fi+0.5)/10.0)*rad;
+          vec4 cr=tap(frag+disp*1.00+o), cg=tap(frag+disp*1.18+o), cb=tap(frag+disp*1.38+o);
+          acc+=vec3(cr.r+u_bg.r*(1.0-cr.a), cg.g+u_bg.g*(1.0-cg.a), cb.b+u_bg.b*(1.0-cb.a));
+        }
+        vec3 col=acc/10.0;
+        // milky haze in the glass body so text reads clearly on top
+        col=mix(col, vec3(0.11,0.125,0.12), 0.32*t);
+        col*=vec3(0.97,0.99,1.0);
+        vec2 L=normalize(vec2(-0.5,0.86));
+        float facing=dot(n,L), rim=pow(s,2.4);
+        float spec=rim*smoothstep(0.0,1.0,facing)*0.42 + pow(s,16.0)*0.22;
+        float edge=smoothstep(2.6,0.6,-d)*(0.22+0.3*max(facing,0.0));
+        float shade=rim*smoothstep(0.0,1.0,-facing)*0.2;
+        col=col*(1.0-shade)+vec3(spec+edge)+vec3(0.010,0.012,0.014);
+        gl_FragColor=vec4(col,1.0)*cover;
+      }`;
+    function link(vs, fs) {
+      const p = gl.createProgram();
+      gl.attachShader(p, shader(gl.VERTEX_SHADER, vs));
+      gl.attachShader(p, shader(gl.FRAGMENT_SHADER, fs));
+      gl.bindAttribLocation(p, 4, "a_quad");
+      gl.linkProgram(p);
+      if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
+      return p;
+    }
+    try {
+      glass.prog = link(v, fGlass);
+      glass.copy = link(v, fCopy);
+    } catch (e) {
+      console.warn("Glass compositor off:", e);
+      return;
+    }
+    for (const n of ["u_scene", "u_res", "u_box", "u_c", "u_half", "u_r", "u_bevel", "u_bg", "u_frost", "u_dpr"])
+      glass.u[n] = gl.getUniformLocation(glass.prog, n);
+    for (const n of ["u_scene", "u_res", "u_box"]) glass.uc[n] = gl.getUniformLocation(glass.copy, n);
+    glass.quad = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, glass.quad);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]), gl.STATIC_DRAW);
+    glass.on = true;
+    collectGlass();
+    try {
+      const m = getComputedStyle(document.body).backgroundColor.match(/[\d.]+/g);
+      if (m) for (let i = 0; i < 3; i++) bgRGB[i] = +m[i] / 255;
+    } catch (e) {}
+  }
+  function collectGlass() {
+    glass.els = Array.from(document.querySelectorAll(GLASS_SEL)).map((el) => ({ el, r: -1 }));
+  }
+  function glassTarget() {
+    const w = canvas.width, h = canvas.height;
+    if (glass.fbo && glass.w === w && glass.h === h) return;
+    if (!glass.tex) glass.tex = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, glass.tex);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+    for (const [k, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]])
+      gl.texParameteri(gl.TEXTURE_2D, k, v);
+    if (!glass.fbo) glass.fbo = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, glass.fbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, glass.tex, 0);
+    if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) glass.on = false;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    glass.w = w;
+    glass.h = h;
+  }
+  function glassComposite() {
+    const W = canvas.width, H = canvas.height;
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, W, H);
+    gl.clearColor(0, 0, 0, 0);
+    gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, glass.tex);
+    gl.bindBuffer(gl.ARRAY_BUFFER, glass.quad);
+    gl.enableVertexAttribArray(4);
+    gl.vertexAttribPointer(4, 2, gl.FLOAT, false, 0, 0);
+    gl.disable(gl.BLEND);
+    gl.useProgram(glass.copy);
+    gl.uniform1i(glass.uc.u_scene, 0);
+    gl.uniform2f(glass.uc.u_res, W, H);
+    gl.uniform4f(glass.uc.u_box, 0, 0, W, H);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.useProgram(glass.prog);
+    gl.uniform1i(glass.u.u_scene, 0);
+    gl.uniform2f(glass.u.u_res, W, H);
+    gl.uniform3f(glass.u.u_bg, bgRGB[0], bgRGB[1], bgRGB[2]);
+    gl.uniform1f(glass.u.u_dpr, dpr);
+    gl.uniform1f(glass.u.u_frost, 11.0);
+    for (const g of glass.els) {
+      const b = g.el.getBoundingClientRect();
+      if (!b.width || b.bottom < 0 || b.top > height) continue;
+      if (g.r < 0) {
+        const cs = getComputedStyle(g.el).borderTopLeftRadius;
+        const v = parseFloat(cs) || 0;
+        g.pct = cs.indexOf("%") > -1 ? v / 100 : -1;
+        g.r = v;
+      }
+      const w = b.width * dpr, h = b.height * dpr;
+      const rad = Math.min(g.pct > 0 ? g.pct * Math.min(b.width, b.height) : g.r, Math.min(b.width, b.height) / 2) * dpr;
+      const x = b.left * dpr, y = H - b.bottom * dpr;
+      gl.uniform4f(glass.u.u_box, x - 2, y - 2, w + 4, h + 4);
+      gl.uniform2f(glass.u.u_c, x + w / 2, y + h / 2);
+      gl.uniform2f(glass.u.u_half, w / 2, h / 2);
+      gl.uniform1f(glass.u.u_r, rad);
+      gl.uniform1f(glass.u.u_bevel, Math.max(5 * dpr, Math.min(20 * dpr, Math.min(w, h) * 0.2)));
+      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    }
+    gl.disableVertexAttribArray(4);
+    gl.useProgram(program);
+    gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    if (!document.documentElement.classList.contains("glass-gl")) document.documentElement.classList.add("glass-gl");
+  }
   function resize() {
     width = innerWidth;
     height = innerHeight;
@@ -305,6 +475,11 @@ function mountRotanaParticles(host) {
     if (reduced.matches || document.hidden) draw();
   }
   function draw() {
+    if (glass.on) {
+      glassTarget();
+      gl.bindFramebuffer(gl.FRAMEBUFFER, glass.on ? glass.fbo : null);
+    }
+    gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT);
     gl.uniformMatrix4fv(
@@ -322,6 +497,7 @@ function mountRotanaParticles(host) {
     gl.uniform2f(uniforms.u_look, pointer.x, pointer.y);
     gl.uniform3f(uniforms.u_tint, tint[0], tint[1], tint[2]);
     gl.drawArrays(gl.POINTS, 0, kinds.length);
+    if (glass.on) glassComposite();
     if (++frame % 30 === 0) canvas.dataset.frame = String(frame);
   }
   function tick(now) {
@@ -410,6 +586,7 @@ function mountRotanaParticles(host) {
       );
       const progress = Math.min(Math.max(scrollY / max, 0), 1);
       target.y = (progress - 0.5) * 1.6;
+      if (glass.on && (reduced.matches || document.hidden)) draw();
     },
     { passive: true, signal: events.signal },
   );
@@ -443,6 +620,9 @@ function mountRotanaParticles(host) {
     signal: events.signal,
   });
   reduced.addEventListener("change", resume, { signal: events.signal });
+  glassInit();
+  addEventListener("rotana:glass-refresh", () => { collectGlass(); if (reduced.matches) draw(); }, { signal: events.signal });
+  addEventListener("resize", () => glass.els.forEach((g) => (g.r = -1)), { passive: true, signal: events.signal });
   resize();
   resume();
   return () => {

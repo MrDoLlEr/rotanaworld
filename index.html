@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Cairo:wght@800;900&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Readex+Pro:wght@400;500;600;700&family=Alexandria:wght@300;400;500;600;700&family=Cairo:wght@800;900&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
     />
     <link rel="stylesheet" href="style.css" />
     <style>
@@ -301,9 +301,69 @@
         .x-card.is-arrived .x-panel { animation: none; box-shadow: 0 0 28px 2px rgba(24, 199, 128, 0.35); } 
         .x-btn, .x-icon, .x-card, .x-share { transition: none; }
       }
+
+      /* ---- Typography (AR + EN) ---- */
+      .x-dt--sub { max-width: 380px; aspect-ratio: 6.2 / 1; margin: 0 auto 6px; }
+      .x-dt--sub canvas { filter: drop-shadow(0 0 2px rgba(255,255,255,.9)) drop-shadow(0 0 10px rgba(255,255,255,.35)); }
+      .x-head .x-dt__text--sub { font-size: 34px; }
+      .x-tagline { margin: 6px auto 0 !important; max-width: 560px; font: 500 19px/1.6 "Readex Pro", var(--x-font) !important; color: rgba(255,255,255,.86) !important; letter-spacing: 0; text-shadow: 0 2px 14px rgba(0,0,0,.6); }
+      @media (min-width: 900px) { .x-tagline { font-size: 21px !important; } }
+      .x-card h2 { font: 600 20px/1.35 "Readex Pro", var(--x-font) !important; letter-spacing: .01em; color: rgba(255,255,255,.92); }
+      .x-card__line { font: 600 21px/1.5 "Readex Pro", var(--x-font) !important; color: #fff; }
+      .x-card__note { margin: -4px 0 2px; font: 500 19px/1.6 "IBM Plex Sans Arabic", "Readex Pro", var(--x-font); color: rgba(255,255,255,.88); flex: none; text-shadow: 0 1px 10px rgba(0,0,0,.5); }
+      .x-card__note--cta { margin: 0 0 -2px; font-weight: 600; color: #fff; }
+      html[lang="en"] .x-card__line, html[lang="en"] .x-tagline, html[lang="en"] .x-card h2 { font-family: "Readex Pro", system-ui, sans-serif !important; }
+      html[lang="en"] .x-card__note { font-family: "Readex Pro", system-ui, sans-serif; }
+      .x-btn { min-height: 42px !important; padding: 8px 16px !important; border-radius: 14px !important; font: 500 14.5px/1.2 "Readex Pro", var(--x-font) !important; }
+      .x-store { min-height: 44px !important; }
+
+      /* ---- Icon tiles: crystal tile, glyph in its brand colour ---- */
+      .x-icon, .x-icon--ig, .x-icon--x, .x-icon--tt, .x-icon--yt, .x-icon--fb, .x-icon--sc { background: rgba(255,255,255,.06) !important; border: 1px solid rgba(255,255,255,.24); }
+      .x-icon::after { display: none; }
+      .x-icon--ig svg path { fill: url(#rw-ig); }
+      .x-icon--sc svg path { fill: #FFFC00; stroke: none; }
+
+      /* ---- Real crystal glass (WebGL refraction behind) ---- */
+      html.glass-gl .x-glass, html.glass-gl .x-btn, html.glass-gl .x-icon, html.glass-gl .x-store {
+        background: transparent !important; background-image: none !important;
+        -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+        border-color: rgba(255,255,255,.16) !important;
+      }
+      html.glass-gl .x-glass { box-shadow: 0 24px 60px rgba(0,0,0,.35) !important; }
+      html.glass-gl .x-btn, html.glass-gl .x-icon { box-shadow: none !important; }
+      html.glass-gl .x-glass::before, html.glass-gl .x-glass::after { display: none; }
+      html.glass-gl .x-btn:hover, html.glass-gl .x-btn:focus-visible { border-color: var(--x-green) !important; }
+
+      /* ---- Bigger, balanced type ---- */
+      .x-card h2 { font-size: 24px !important; }
+      .x-card__line { font-size: 24px !important; line-height: 1.45 !important; text-wrap: balance; word-break: keep-all; }
+      .x-card__note { font-size: 20px !important; line-height: 1.55 !important; white-space: pre-line; text-wrap: balance; word-break: keep-all; }
+      .x-tagline { font-size: 22px !important; text-wrap: balance; }
+      .x-btn { font-size: 16px !important; min-height: 46px !important; }
+      @media (min-width: 900px) {
+        .x-card h2 { font-size: 26px !important; }
+        .x-card__line { font-size: 26px !important; }
+        .x-card__note { font-size: 21px !important; }
+        .x-tagline { font-size: 25px !important; }
+        .x-icon { flex-basis: 42px !important; width: 42px !important; height: 42px !important; border-radius: 13px !important; }
+        .x-icon svg { width: 21px !important; height: 21px !important; }
+      }
+
+      /* ---- Font: Alexandria (AR + EN) ---- */
+      .x-card h2, .x-card__line, .x-btn, .x-tagline, .x-card__note,
+      html[lang="en"] .x-card h2, html[lang="en"] .x-card__line, html[lang="en"] .x-tagline, html[lang="en"] .x-card__note {
+        font-family: "Alexandria", "IBM Plex Sans Arabic", system-ui, sans-serif !important;
+      }
+      .x-card h2 { font-weight: 600 !important; }
+      .x-card__line { font-weight: 600 !important; }
+      .x-card__note { font-weight: 400 !important; }
+      .x-card__note--cta { font-weight: 500 !important; }
+      .x-btn { font-weight: 500 !important; }
+      .x-tagline { font-weight: 400 !important; }
     </style>
   </head>
   <body>
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><radialGradient id="rw-ig" cx="30%" cy="107%" r="150%"><stop offset="0" stop-color="#fdf497"/><stop offset=".05" stop-color="#fdf497"/><stop offset=".45" stop-color="#fd5949"/><stop offset=".6" stop-color="#d6249f"/><stop offset=".9" stop-color="#285AEB"/></radialGradient></defs></svg>
     <div id="bg" class="rotana-background-host" aria-hidden="true"></div>
     <div class="page" id="top">
       <main class="x-wrap">
@@ -313,7 +373,11 @@
             <canvas id="dotTitle" aria-hidden="true"></canvas>
             <h1 class="x-dt__text">عالم روتانا</h1>
           </div>
-          <p data-en="Follow and sing with us">تابع وغنّي معانا</p>
+          <div class="x-dt x-dt--sub" id="dotSubWrap">
+            <canvas id="dotSub" aria-hidden="true"></canvas>
+            <p class="x-dt__text x-dt__text--sub">تابع وغنّي معانا</p>
+          </div>
+          <p class="x-tagline" data-en="Concerts, songs, stars, and content that brings you closer to Rotana">حفلات، أغاني، نجوم، ومحتوى يجمعك بروتانا</p>
         </header>
 
         <div class="x-cards">
@@ -324,10 +388,10 @@
             <div class="x-panel x-glass">
             <span class="x-arrived" hidden data-en="You came via the QR code">وصلت عبر الكود</span>
             <h2 id="music-t" data-en="Rotana Music">روتانا ميوزك</h2>
-            <p class="x-card__line" data-en="The world of tarab and music">عالم الطرب والموسيقى</p>
+            <p class="x-card__line" data-en="Everything new in music starts here">كل جديد في عالم الموسيقى يبدأ من هنا</p>
             <div class="x-btns">
-              <a class="x-btn" href="https://music.rotanamusic.com/music-releases" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Latest releases">تابع أحدث الإصدارات</span></a>
-              <a class="x-btn" href="https://rotanamusic.com/" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Rotana Music website">موقع روتانا ميوزك</span></a>
+              <a class="x-btn" href="https://music.rotanamusic.com/music-releases" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Discover the latest songs">اكتشف أحدث الأغاني</span></a>
+              <a class="x-btn" href="https://rotanamusic.com/" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Discover Rotana's world">اكتشف عالم روتانا</span></a>
             </div>
             <div class="x-icons">
               <a class="x-icon x-icon--ig" href="https://www.instagram.com/rotanamusic/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path fill="#fff" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a>
@@ -347,9 +411,12 @@
             <div class="x-panel x-glass">
             <span class="x-arrived" hidden data-en="You came via the QR code">وصلت عبر الكود</span>
             <h2 id="live-t" data-en="Rotana Live">روتانا لايف</h2>
-            <p class="x-card__line" data-en="Rotana concerts, the vibe and the coverage">حفلات روتانا وأجواءها وتغطياتها</p>
+            <p class="x-card__line" data-en="Live the concert vibe, moment by moment">عيش أجواء الحفلات لحظة بلحظة</p>
+            <p class="x-card__note" data-en="From the stage to your phone,
+don't miss the excitement.">من المسرح إلى جوالك..
+لا يفوتك الحماس.</p>
             <div class="x-btns">
-              <a class="x-btn" href="https://www.instagram.com/rotanalive/" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Follow Rotana Live">تابع روتانا لايف</span></a>
+              <a class="x-btn" href="https://www.instagram.com/rotanalive/" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Live the vibe">عيش الأجواء</span></a>
             </div>
             <div class="x-icons">
               <a class="x-icon x-icon--ig" href="https://www.instagram.com/rotanalive/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path fill="#fff" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a>
@@ -368,7 +435,8 @@
             <div class="x-panel x-glass">
             <span class="x-arrived" hidden data-en="You came via the QR code">وصلت عبر الكود</span>
             <h2 id="fm-t" data-en="Rotana FM">روتانا إف إم</h2>
-            <p class="x-card__line" data-en="Rotana radio in Saudi Arabia, on air with you">إذاعة روتانا السعودية، معاك على الهوا</p>
+            <p class="x-card__line" data-en="Tune your day to Rotana">خلّ يومك على موجة روتانا</p>
+            <p class="x-card__note" data-en="Your favorite songs and a vibe that brightens your day.">أغانيك المفضلة وأجواء تحلّي يومك.</p>
             <div class="x-btns">
               <a class="x-btn" href="https://www.instagram.com/rotanafmksa/" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Follow Rotana FM">تابع روتانا إف إم</span></a>
             </div>
@@ -388,7 +456,8 @@
             <div class="x-panel x-glass">
             <span class="x-arrived" hidden data-en="You came via the QR code">وصلت عبر الكود</span>
             <h2 id="tunes-t" data-en="Rotana Tunes">روتانا تيونز</h2>
-            <p class="x-card__line" data-en="Sing Rotana songs in your voice, share with us through the app and let us hear you">أغاني روتانا بصوتك، شاركنا عبر التطبيق وسمّعنا</p>
+            <p class="x-card__line" data-en="Sing along to Rotana songs on karaoke, and let us hear your voice!">غنّوا مع أغاني روتانا على الكاريوكي، وخلّونا نسمع صوتكم!</p>
+            <p class="x-card__note x-card__note--cta" data-en="Download the app, start singing">حمّل التطبيق، ابدأ الغناء</p>
             <div class="x-btns" id="stores">
               <a class="x-btn x-store" data-store="ios" href="https://apps.apple.com/sa/app/rotana-tunes/id6760004818" target="_blank" rel="noopener" aria-label="Download on the App Store"><svg class="x-store__logo" viewBox="0 0 384 512" aria-hidden="true"><path fill="#ffffff" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg><span class="x-store__txt"><small>Download on the</small><b>App Store</b></span></a>
               <a class="x-btn x-store" data-store="android" href="https://play.google.com/store/apps/details?id=rotana.tunes" target="_blank" rel="noopener" aria-label="Get it on Google Play"><svg class="x-store__logo" viewBox="0 0 24 26" aria-hidden="true"><path fill="#00D7FE" d="M1.1.6C.8.9.6 1.4.6 2v22c0 .6.2 1.1.5 1.4l.1.1L13.5 13.2V12.8L1.2.5z"/><path fill="#FFC900" d="M17.6 17.3l-4.1-4.1v-.4l4.1-4.1.1.1 4.9 2.8c1.4.8 1.4 2.1 0 2.9l-4.9 2.8z"/><path fill="#FF3A44" d="M17.7 17.2L13.5 13 1.1 25.4c.5.5 1.2.5 2.1.1l14.5-8.3"/><path fill="#00F076" d="M17.7 8.8L3.2.5C2.3 0 1.6.1 1.1.6L13.5 13z"/></svg><span class="x-store__txt"><small>GET IT ON</small><b>Google Play</b></span></a>
@@ -418,6 +487,8 @@
         var h1 = document.querySelector(".x-dt__text"); if (h1) h1.textContent = en ? "Rotana World" : "عالم روتانا";
         btn.textContent = en ? "عربي" : "EN";
         if (rebuild && window.__dtSet) window.__dtSet(en ? "Rotana World" : "عالم روتانا");
+        var sub = document.querySelector(".x-dt__text--sub"); if (sub) sub.textContent = en ? "Follow and sing with us" : "تابع وغنّي معانا";
+        if (rebuild && window.__dsSet) window.__dsSet(en ? "Follow and sing with us" : "تابع وغنّي معانا");
       }
       var saved = null; try { saved = localStorage.getItem("rw-lang"); } catch (e) {}
       var first = saved || ((navigator.language || "ar").toLowerCase().indexOf("ar") === 0 ? "ar" : "en");
@@ -494,7 +565,7 @@
           var url = location.href.split("#")[0];
           var EN = window.__rwEn && window.__rwEn();
           var T = EN ? { copy: "Copy the link: ", done: "Link copied ✓", copying: "Copying link…", sharing: "Sharing…", thanks: "Thanks for sharing ✓" } : { copy: "انسخ الرابط: ", done: T.done, copying: T.copying, sharing: T.sharing, thanks: T.thanks };
-          var data = { title: EN ? "Rotana World" : "عالم روتانا", text: EN ? "Follow and sing with us" : "تابع وغنّي معانا", url: url };
+          var data = { title: EN ? "Rotana World" : "عالم روتانا", text: EN ? "Concerts, songs, stars, and content that brings you closer to Rotana" : "حفلات، أغاني، نجوم، ومحتوى يجمعك بروتانا", url: url };
           var status = document.getElementById("share-status");
           function flash(msg) {
             btn.textContent = msg;
@@ -547,12 +618,12 @@
       })();
     </script>
     <script>
-    (function () {
-      var wrap = document.getElementById("dotTitleWrap");
-      var cv = document.getElementById("dotTitle");
+    function dotText(wrapId, cvId, AR, EN, setter) {
+      var wrap = document.getElementById(wrapId);
+      var cv = document.getElementById(cvId);
       if (!wrap || !cv || !cv.getContext) return;
       var ctx = cv.getContext("2d");
-      var TEXT = document.documentElement.lang === "en" ? "Rotana World" : "عالم روتانا";
+      var TEXT = document.documentElement.lang === "en" ? EN : AR;
       var dots = [], W = 0, H = 0, dpr = 1, ptr = { x: -9999, y: -9999 }, t0 = performance.now();
       var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
       var built = false, lastW = 0;
@@ -568,7 +639,7 @@
         o.font = "900 " + fs + "px Cairo, 'IBM Plex Sans Arabic', sans-serif";
         var tw = o.measureText(TEXT).width;
         if (tw > W * 0.96) { fs = fs * (W * 0.96) / tw; o.font = "900 " + fs + "px Cairo, 'IBM Plex Sans Arabic', sans-serif"; }
-        o.direction = TEXT === "Rotana World" ? "ltr" : "rtl"; o.textAlign = "center"; o.textBaseline = "middle"; o.fillStyle = "#fff";
+        o.direction = /[\u0600-\u06FF]/.test(TEXT) ? "rtl" : "ltr"; o.textAlign = "center"; o.textBaseline = "middle"; o.fillStyle = "#fff";
         o.fillText(TEXT, W / 2, H * 0.56);
         var data = o.getImageData(0, 0, W, H).data;
         var step = Math.max(3, Math.round(W / 150));
@@ -608,9 +679,11 @@
       wrap.addEventListener("touchmove", setP, { passive: true }); wrap.addEventListener("touchend", clearP);
       var ready = (document.fonts && document.fonts.load) ? document.fonts.load("900 60px Cairo", TEXT) : Promise.resolve();
       Promise.resolve(ready).catch(function () {}).then(function () { build(); requestAnimationFrame(frame); });
-      window.__dtSet = function (t) { TEXT = t; var go = function () { build(); if (still) requestAnimationFrame(frame); }; (document.fonts && document.fonts.load ? document.fonts.load("900 60px Cairo", t) : Promise.resolve()).catch(function () {}).then(go); };
+      window[setter] = function (t) { TEXT = t; var go = function () { build(); if (still) requestAnimationFrame(frame); }; (document.fonts && document.fonts.load ? document.fonts.load("900 60px Cairo", t) : Promise.resolve()).catch(function () {}).then(go); };
       var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { var w = Math.round(wrap.getBoundingClientRect().width); if (built && w === lastW) return; build(true); }, 200); });
-    })();
+    }
+    dotText("dotTitleWrap", "dotTitle", "عالم روتانا", "Rotana World", "__dtSet");
+    dotText("dotSubWrap", "dotSub", "تابع وغنّي معانا", "Follow and sing with us", "__dsSet");
     </script>
   </body>
 </html>
