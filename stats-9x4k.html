@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow">
+<title>إحصائيات عالم روتانا</title>
+<link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07080c;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--tx:#f3f4f7;--mu:#9aa0ad;--ac:#7fd3ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(1200px 600px at 50% -10%,#18202e,var(--bg));color:var(--tx);font-family:Almarai,system-ui,sans-serif;min-height:100vh}
+.w{max-width:960px;margin:0 auto;padding:24px 16px 60px}h1{font-size:26px;margin:0 0 4px}.sub{color:var(--mu);font-size:14px;margin-bottom:18px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}.bar button{background:var(--card);border:1px solid var(--line);color:var(--tx);font:inherit;padding:8px 14px;border-radius:999px;cursor:pointer}.bar button.on{background:#fff;color:#000}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}@media(max-width:640px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.k{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;backdrop-filter:blur(14px)}.k b{display:block;font-size:30px;font-weight:800}.k span{color:var(--mu);font-size:13px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}@media(max-width:640px){.grid{grid-template-columns:1fr}}
+.c{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}.c h2{font-size:16px;margin:0 0 10px}
+.r{display:grid;grid-template-columns:110px 1fr 44px;align-items:center;gap:8px;font-size:14px;margin:7px 0}.r i{display:block;height:10px;border-radius:6px;background:var(--ac)}.r em{font-style:normal;text-align:left;color:var(--mu)}
+.days{display:flex;align-items:flex-end;gap:3px;height:120px}.days div{flex:1;background:var(--ac);border-radius:4px 4px 0 0;min-height:2px;position:relative}
+.note{color:var(--mu);font-size:12px;margin-top:16px;line-height:1.7}.err{color:#ff8a8a}
+</style>
+</head>
+<body><div class="w">
+<h1>إحصائيات عالم روتانا</h1><div class="sub" id="upd">جاري التحميل…</div>
+<div class="bar" id="bar"><button data-d="1">اليوم</button><button data-d="7">٧ أيام</button><button data-d="30" class="on">٣٠ يوم</button><button data-d="365">سنة</button></div>
+<div class="kpis">
+<div class="k"><b id="k1">–</b><span>زوار (أشخاص)</span></div>
+<div class="k"><b id="k2">–</b><span>جوا من مسح الكود</span></div>
+<div class="k"><b id="k3">–</b><span>ضغطوا تحميل التطبيق</span></div>
+<div class="k"><b id="k4">–</b><span>مرات الدخول</span></div>
+</div>
+<div class="c" style="margin-bottom:10px"><h2>الزوار يومياً</h2><div class="days" id="days"></div></div>
+<div class="grid">
+<div class="c"><h2>جوا من وين</h2><div id="src"></div></div>
+<div class="c"><h2>نوع الجهاز</h2><div id="dev"></div></div>
+<div class="c"><h2>البلد / المدينة</h2><div id="tz"></div></div>
+<div class="c"><h2>أكثر شي ضغطوا عليه</h2><div id="clk"></div></div>
+<div class="c"><h2>ساعات الدخول (توقيت السعودية)</h2><div id="hr"></div></div>
+<div class="c"><h2>لغة الجوال</h2><div id="lng"></div></div>
+</div>
+<div class="note">«مسح الكود» = دخول من جوال بدون أي مصدر (ما جا من إنستقرام أو X أو غيرهم). الرقم تقريبي، وممكن يدخل معاه قلة كتبوا الرابط بيدهم.<br>«ضغطوا تحميل» = ضغطات على أزرار App Store و Google Play. التثبيت الفعلي يطلع في حسابات المتاجر.</div>
+</div>
+<script>
+var SB="https://vtowjbodaleyenptghwm.supabase.co",KEY="sb_publishable_fnBayg7q3G25VaYNCXu7aQ_rEg59kt3";
+var SRC={qr:"مسح الكود",instagram:"إنستقرام",x:"X",facebook:"فيسبوك",snapchat:"سناب شات",tiktok:"تيك توك",whatsapp:"واتساب",google:"قوقل",youtube:"يوتيوب",direct:"مباشر (كمبيوتر)",other:"مواقع أخرى",linkedin:"لينكدإن",bing:"Bing"};
+var TZ={"Asia/Riyadh":"السعودية","Asia/Dubai":"الإمارات","Asia/Kuwait":"الكويت","Asia/Qatar":"قطر","Asia/Bahrain":"البحرين","Asia/Muscat":"عُمان","Africa/Cairo":"مصر","Asia/Amman":"الأردن","Asia/Beirut":"لبنان","Asia/Baghdad":"العراق","Africa/Khartoum":"السودان","Asia/Damascus":"سوريا","Africa/Casablanca":"المغرب","Africa/Algiers":"الجزائر","Africa/Tunis":"تونس","Asia/Aden":"اليمن","Europe/London":"بريطانيا"};
+function rows(id,a,map){var el=document.getElementById(id);if(!a||!a.length){el.innerHTML='<div class="sub">ما في بيانات لسه</div>';return}var mx=Math.max.apply(0,a.map(function(x){return x.n}));el.innerHTML=a.map(function(x){var k=x.k==null?"غير معروف":(map?(typeof map=="function"?map(x.k):(map[x.k]||x.k)):x.k);return '<div class="r"><span>'+String(k).replace(/</g,"&lt;")+'</span><i style="width:'+Math.max(3,x.n/mx*100)+'%"></i><em>'+x.n+'</em></div>'}).join("")}
+function load(d){document.getElementById("upd").textContent="جاري التحميل…";
+fetch(SB+"/rest/v1/rpc/rw_stats",{method:"POST",headers:{apikey:KEY,"Content-Type":"application/json"},body:JSON.stringify({days:d})}).then(function(r){return r.json()}).then(function(s){
+k1.textContent=s.visitors;k2.textContent=s.qr;k3.textContent=s.store_clicks;k4.textContent=s.visits;
+rows("src",s.by_src,SRC);rows("dev",s.by_device);rows("tz",s.by_tz,function(k){return TZ[k]||k.split("/").pop().replace(/_/g," ")});rows("clk",s.clicks);rows("lng",s.by_lang);
+rows("hr",s.by_hour,function(h){return (h%12||12)+(h<12?" ص":" م")});
+var dd=s.by_day||[],mx=Math.max.apply(0,dd.map(function(x){return x.n}).concat([1]));document.getElementById("days").innerHTML=dd.map(function(x){return '<div title="'+x.k+': '+x.n+'" style="height:'+(x.n/mx*100)+'%"></div>'}).join("");
+document.getElementById("upd").textContent="آخر تحديث: "+new Date().toLocaleTimeString("ar-SA");
+}).catch(function(){document.getElementById("upd").innerHTML='<span class="err">ما قدرت أجيب الأرقام، جرّب تاني</span>'})}
+var cur=30;document.getElementById("bar").onclick=function(e){var b=e.target.closest("button");if(!b)return;[].forEach.call(this.children,function(x){x.classList.remove("on")});b.classList.add("on");cur=+b.dataset.d;load(cur)};
+load(cur);setInterval(function(){load(cur)},60000);
+</script>
+</body></html>

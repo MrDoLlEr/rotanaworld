@@ -314,6 +314,9 @@ function mountRotanaParticles(host) {
   const glass = { on: false, prog: null, copy: null, quad: null, fbo: null, tex: null, w: 0, h: 0, els: [], u: {}, uc: {} };
   const bgRGB = [0.012, 0.043, 0.024];
   function glassInit() {
+    // Touch devices scroll on the compositor ahead of rAF, so a WebGL lens drawn
+    // from getBoundingClientRect lags behind its card. Use the CSS glass there.
+    if (matchMedia("(hover: none), (pointer: coarse)").matches || /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) return;
     const hp = gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT);
     if (!hp || hp.precision < 16) return;
     const v = `
@@ -433,6 +436,7 @@ function mountRotanaParticles(host) {
     gl.uniform3f(glass.u.u_bg, bgRGB[0], bgRGB[1], bgRGB[2]);
     gl.uniform1f(glass.u.u_dpr, dpr);
     gl.uniform1f(glass.u.u_frost, 11.0);
+    const cr = canvas.getBoundingClientRect(), sx = W / (cr.width || 1), sy = H / (cr.height || 1);
     for (const g of glass.els) {
       const b = g.el.getBoundingClientRect();
       if (!b.width || b.bottom < 0 || b.top > height) continue;
@@ -442,9 +446,9 @@ function mountRotanaParticles(host) {
         g.pct = cs.indexOf("%") > -1 ? v / 100 : -1;
         g.r = v;
       }
-      const w = b.width * dpr, h = b.height * dpr;
+      const w = b.width * sx, h = b.height * sy;
       const rad = Math.min(g.pct > 0 ? g.pct * Math.min(b.width, b.height) : g.r, Math.min(b.width, b.height) / 2) * dpr;
-      const x = b.left * dpr, y = H - b.bottom * dpr;
+      const x = (b.left - cr.left) * sx, y = (cr.bottom - b.bottom) * sy;
       gl.uniform4f(glass.u.u_box, x - 2, y - 2, w + 4, h + 4);
       gl.uniform2f(glass.u.u_c, x + w / 2, y + h / 2);
       gl.uniform2f(glass.u.u_half, w / 2, h / 2);
