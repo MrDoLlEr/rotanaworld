@@ -109,13 +109,26 @@
       .x-cards { display: grid; grid-template-columns: 1fr; gap: 30px; }
       .x-card { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; scroll-margin-top: 24px; text-align: center; }
       /* Shiny glass (shared) */
+      /* Glass card (Mo's spec) */
       .x-glass {
         position: relative; isolation: isolate; overflow: hidden;
-        border: 1px solid rgba(255, 255, 255, 0.28);
-        background: linear-gradient(160deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03) 60%, rgba(255,255,255,0.05));
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.30), 0 18px 40px rgba(0, 0, 0, 0.40);
-        -webkit-backdrop-filter: blur(16px) saturate(150%);
-        backdrop-filter: blur(16px) saturate(150%);
+        background: rgba(255, 255, 255, 0.2);
+        -webkit-backdrop-filter: blur(9px);
+        backdrop-filter: blur(9px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.1),
+          inset 0 1px 0 rgba(255, 255, 255, 0.5),
+          inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+          inset 0 0 0px 0px rgba(255, 255, 255, 0);
+      }
+      .x-glass::before {
+        content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; pointer-events: none;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+      }
+      .x-glass::after {
+        content: ""; position: absolute; top: 0; left: 0; width: 1px; height: 100%; pointer-events: none;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), transparent, rgba(255, 255, 255, 0.3));
       }
       .x-orb {
         width: 150px; height: 150px; border-radius: 50%;
@@ -130,6 +143,7 @@
       .x-panel > .x-arrived { width: auto; }
       @media (min-width: 900px) { .x-orb { width: 164px; height: 164px; } .x-orb img { max-height: 100px; } }
       .x-orb img.x-orb__tunes { max-width: 72%; max-height: 66px; }
+      .x-orb img.x-orb__fm { max-width: 86%; max-height: 74px; }
       @media (min-width: 900px) { .x-orb img.x-orb__tunes { max-height: 72px; } }
       .x-card__sub {
         display: inline-flex;
@@ -160,8 +174,8 @@
         border: 1px solid rgba(255, 255, 255, 0.25);
         background-color: transparent;
         background-image: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08));
-        -webkit-backdrop-filter: blur(18px) saturate(170%);
-        backdrop-filter: blur(18px) saturate(170%);
+        -webkit-backdrop-filter: blur(18px) saturate(60%);
+        backdrop-filter: blur(18px) saturate(60%);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
         color: var(--x-ink);
         font: 600 15px/1.2 var(--x-font);
@@ -260,8 +274,8 @@
         border: 1px solid rgba(255, 255, 255, 0.25);
         background-color: transparent;
         background-image: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08));
-        -webkit-backdrop-filter: blur(18px) saturate(170%);
-        backdrop-filter: blur(18px) saturate(170%);
+        -webkit-backdrop-filter: blur(18px) saturate(60%);
+        backdrop-filter: blur(18px) saturate(60%);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
         color: var(--x-ink);
         font: 600 13px/1 var(--x-font);
@@ -281,7 +295,7 @@
       @media (min-width: 900px) {
         .x-wrap { padding: 44px 28px 40px; }
         .x-head__logo { width: 180px; }
-        .x-cards { grid-template-columns: repeat(3, 1fr); }
+        .x-cards { grid-template-columns: repeat(2, 1fr); }
       }
       @media (prefers-reduced-motion: reduce) {
         .x-card.is-arrived .x-panel { animation: none; box-shadow: 0 0 28px 2px rgba(24, 199, 128, 0.35); } 
@@ -299,7 +313,7 @@
             <canvas id="dotTitle" aria-hidden="true"></canvas>
             <h1 class="x-dt__text">عالم روتانا</h1>
           </div>
-          <p data-en="Scan, follow, and sing with us">امسح، تابع، وغنّي معانا</p>
+          <p data-en="Follow and sing with us">تابع وغنّي معانا</p>
         </header>
 
         <div class="x-cards">
@@ -310,7 +324,7 @@
             <div class="x-panel x-glass">
             <span class="x-arrived" hidden data-en="You came via the QR code">وصلت عبر الكود</span>
             <h2 id="music-t" data-en="Rotana Music">روتانا ميوزك</h2>
-            <p class="x-card__line" data-en="Tarab and music have their own code">الطرب والموسيقى لهم كود</p>
+            <p class="x-card__line" data-en="The world of tarab and music">عالم الطرب والموسيقى</p>
             <div class="x-btns">
               <a class="x-btn" href="https://music.rotanamusic.com/music-releases" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Latest releases">تابع أحدث الإصدارات</span></a>
               <a class="x-btn" href="https://rotanamusic.com/" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Rotana Music website">موقع روتانا ميوزك</span></a>
@@ -347,6 +361,26 @@
             </div>
           </section>
 
+          <section class="x-card" id="fm" aria-labelledby="fm-t">
+            <div class="x-orb x-glass">
+              <img class="x-orb__fm" src="fm-logo-official.png" alt="Rotana FM" />
+            </div>
+            <div class="x-panel x-glass">
+            <span class="x-arrived" hidden data-en="You came via the QR code">وصلت عبر الكود</span>
+            <h2 id="fm-t" data-en="Rotana FM">روتانا إف إم</h2>
+            <p class="x-card__line" data-en="Rotana radio in Saudi Arabia, on air with you">إذاعة روتانا السعودية، معاك على الهوا</p>
+            <div class="x-btns">
+              <a class="x-btn" href="https://www.instagram.com/rotanafmksa/" target="_blank" rel="noopener"><span aria-hidden="true">↗</span> <span data-en="Follow Rotana FM">تابع روتانا إف إم</span></a>
+            </div>
+            <div class="x-icons">
+              <a class="x-icon x-icon--ig" href="https://www.instagram.com/rotanafmksa/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><path fill="#fff" d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></svg></a>
+              <a class="x-icon x-icon--x" href="https://x.com/RotanaFMKSA" target="_blank" rel="noopener" aria-label="X"><svg viewBox="0 0 24 24"><path fill="#fff" d="M14.234 10.162 22.977 0h-2.072l-7.591 8.824L7.251 0H.258l9.168 13.343L.258 24H2.33l8.016-9.318L16.749 24h6.993zm-2.837 3.299-.929-1.329L3.076 1.56h3.182l5.965 8.532.929 1.329 7.754 11.09h-3.182z"/></svg></a>
+              <a class="x-icon x-icon--fb" href="https://www.facebook.com/RotanaFMKSA" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path fill="#0866FF" d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></svg></a>
+              <a class="x-icon x-icon--sc" href="https://www.snapchat.com/@rotanafmksa" target="_blank" rel="noopener" aria-label="Snapchat"><svg viewBox="0 0 24 24"><path fill="#fff" stroke="#000" stroke-width="1.1" stroke-linejoin="round" d="M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.54 0-.958.089-1.272.149-.211.043-.391.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-1.107-.435-1.257-.93-1.197-1.273.09-.479.674-.793 1.168-.793.146 0 .27.029.383.074.42.194.789.3 1.104.3.234 0 .384-.06.465-.105l-.046-.569c-.098-1.626-.225-3.651.307-4.837C7.392 1.077 10.739.807 11.727.807l.419-.015h.06z"/></svg></a>
+            </div>
+            </div>
+          </section>
+
           <section class="x-card" id="tunes" aria-labelledby="tunes-t">
             <div class="x-orb x-glass">
               <img class="x-orb__tunes" src="tunes-logo-white.png" alt="Rotana Tunes" />
@@ -354,7 +388,7 @@
             <div class="x-panel x-glass">
             <span class="x-arrived" hidden data-en="You came via the QR code">وصلت عبر الكود</span>
             <h2 id="tunes-t" data-en="Rotana Tunes">روتانا تيونز</h2>
-            <p class="x-card__line" data-en="Sing Rotana songs in your voice. Scan the code and let us hear you">أغاني روتانا بصوتك، امسح الكود وسمّعنا</p>
+            <p class="x-card__line" data-en="Sing Rotana songs in your voice, share with us through the app and let us hear you">أغاني روتانا بصوتك، شاركنا عبر التطبيق وسمّعنا</p>
             <div class="x-btns" id="stores">
               <a class="x-btn x-store" data-store="ios" href="https://apps.apple.com/sa/app/rotana-tunes/id6760004818" target="_blank" rel="noopener" aria-label="Download on the App Store"><svg class="x-store__logo" viewBox="0 0 384 512" aria-hidden="true"><path fill="#ffffff" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg><span class="x-store__txt"><small>Download on the</small><b>App Store</b></span></a>
               <a class="x-btn x-store" data-store="android" href="https://play.google.com/store/apps/details?id=rotana.tunes" target="_blank" rel="noopener" aria-label="Get it on Google Play"><svg class="x-store__logo" viewBox="0 0 24 26" aria-hidden="true"><path fill="#00D7FE" d="M1.1.6C.8.9.6 1.4.6 2v22c0 .6.2 1.1.5 1.4l.1.1L13.5 13.2V12.8L1.2.5z"/><path fill="#FFC900" d="M17.6 17.3l-4.1-4.1v-.4l4.1-4.1.1.1 4.9 2.8c1.4.8 1.4 2.1 0 2.9l-4.9 2.8z"/><path fill="#FF3A44" d="M17.7 17.2L13.5 13 1.1 25.4c.5.5 1.2.5 2.1.1l14.5-8.3"/><path fill="#00F076" d="M17.7 8.8L3.2.5C2.3 0 1.6.1 1.1.6L13.5 13z"/></svg><span class="x-store__txt"><small>GET IT ON</small><b>Google Play</b></span></a>
@@ -368,9 +402,7 @@
 
         <footer class="x-foot">
           <p data-en="Rotana © 2026">روتانا © 2026</p>
-          <button class="x-share" type="button" id="share" data-en="↗ Share page">↗ شارك الصفحة</button>
         </footer>
-        <p class="x-share-status" id="share-status" role="status" aria-live="polite" hidden></p>
       </main>
     </div>
     <script>
@@ -439,7 +471,7 @@
         }
 
         // QR deep links
-        var ids = ["music", "live", "tunes"];
+        var ids = ["music", "live", "fm", "tunes"];
         function arrive() {
           var id = (location.hash || "").slice(1);
           if (ids.indexOf(id) < 0) return;
@@ -462,7 +494,7 @@
           var url = location.href.split("#")[0];
           var EN = window.__rwEn && window.__rwEn();
           var T = EN ? { copy: "Copy the link: ", done: "Link copied ✓", copying: "Copying link…", sharing: "Sharing…", thanks: "Thanks for sharing ✓" } : { copy: "انسخ الرابط: ", done: T.done, copying: T.copying, sharing: T.sharing, thanks: T.thanks };
-          var data = { title: EN ? "Rotana World" : "عالم روتانا", text: EN ? "Scan, follow, and sing with us" : "امسح، تابع، وغنّي معانا", url: url };
+          var data = { title: EN ? "Rotana World" : "عالم روتانا", text: EN ? "Follow and sing with us" : "تابع وغنّي معانا", url: url };
           var status = document.getElementById("share-status");
           function flash(msg) {
             btn.textContent = msg;
@@ -511,7 +543,7 @@
           setTimeout(arrive, 150);
         });
         window.addEventListener("hashchange", arrive);
-        document.getElementById("share").addEventListener("click", share);
+        var shareBtn = document.getElementById("share"); if (shareBtn) shareBtn.addEventListener("click", share);
       })();
     </script>
     <script>
@@ -523,7 +555,8 @@
       var TEXT = document.documentElement.lang === "en" ? "Rotana World" : "عالم روتانا";
       var dots = [], W = 0, H = 0, dpr = 1, ptr = { x: -9999, y: -9999 }, t0 = performance.now();
       var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
-      function build() {
+      var built = false, lastW = 0;
+      function build(keep) {
         var r = wrap.getBoundingClientRect();
         W = Math.round(r.width); H = Math.round(r.height);
         if (!W || !H) return;
@@ -543,9 +576,10 @@
         for (var y = 0; y < H; y += step) for (var x = 0; x < W; x += step) {
           if (data[(y * W + x) * 4 + 3] > 140) dots.push({ x: x, y: y, ox: x + (Math.random() - .5) * W, oy: y + (Math.random() - .5) * H, px: 0, py: 0, ph: Math.random() * 6.28, s: step });
         }
-        dots.forEach(function (d) { d.px = d.ox; d.py = d.oy; });
+        if (keep) { dots.forEach(function (d) { d.ox = d.x; d.oy = d.y; d.px = d.x; d.py = d.y; }); }
+        else { dots.forEach(function (d) { d.px = d.ox; d.py = d.oy; }); t0 = performance.now(); }
         wrap.classList.add("is-dots");
-        t0 = performance.now();
+        built = true; lastW = W;
       }
       function frame(now) {
         if (!W) { requestAnimationFrame(frame); return; }
@@ -575,7 +609,7 @@
       var ready = (document.fonts && document.fonts.load) ? document.fonts.load("900 60px Cairo", TEXT) : Promise.resolve();
       Promise.resolve(ready).catch(function () {}).then(function () { build(); requestAnimationFrame(frame); });
       window.__dtSet = function (t) { TEXT = t; var go = function () { build(); if (still) requestAnimationFrame(frame); }; (document.fonts && document.fonts.load ? document.fonts.load("900 60px Cairo", t) : Promise.resolve()).catch(function () {}).then(go); };
-      var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(build, 200); });
+      var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(function () { var w = Math.round(wrap.getBoundingClientRect().width); if (built && w === lastW) return; build(true); }, 200); });
     })();
     </script>
   </body>

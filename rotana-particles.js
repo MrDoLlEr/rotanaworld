@@ -398,7 +398,7 @@ function mountRotanaParticles(host) {
     passive: true,
     signal: events.signal,
   });
-  // Scrolling tilts the scene and sends a pulse from the globe, at most every 1.2s.
+  // Scrolling tilts the scene gently (no globe pulse).
   addEventListener(
     "scroll",
     () => {
@@ -410,10 +410,6 @@ function mountRotanaParticles(host) {
       );
       const progress = Math.min(Math.max(scrollY / max, 0), 1);
       target.y = (progress - 0.5) * 1.6;
-      if (now - lastScrollPulse > 1200) {
-        lastScrollPulse = now;
-        dispatchEvent(new Event("rotana:pulse"));
-      }
     },
     { passive: true, signal: events.signal },
   );
